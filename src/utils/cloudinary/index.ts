@@ -1,0 +1,1 @@
+export { cloudinaryImage } from './cloudinary';

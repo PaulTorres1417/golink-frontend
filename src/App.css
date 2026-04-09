@@ -1,0 +1,27 @@
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'Google Sans', sans-serif;
+  box-sizing: border-box;
+  background-color: var(--bg);
+  color: var(--text);
+  overscroll-behavior: none;
+}
+:root {
+  --bg: rgb(231, 233, 234);
+  --text: #302f2f;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --text: rgb(231, 233, 234);
+}
+

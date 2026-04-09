@@ -1,0 +1,1 @@
+export { ModalNotification } from './ModalNotification';

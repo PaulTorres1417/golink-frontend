@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+
+# Build
+dist/
+dist-ssr/
+stats.html
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Cache
+.eslintcache
+*.tsbuildinfo
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# OS
+.DS_Store
+
+# Misc
+*.local
