@@ -8,14 +8,13 @@ export type User = {
   avatar?: string | null;
   coverphoto?: string | null;
   bio?: string | null;
-  username: string; 
+  username?: string; 
 };
 
 type AuthState = {
   user: User | null;
-  token: string | null;
-  setAuth: (user: User, token: string) => void;
-  setUser: (user: Partial<User>) => void;
+  setUser: (user: User) => void;
+  updateUser: (user: Partial<User>) => void;
   logout: () => void;
 };
 
@@ -23,17 +22,16 @@ export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      token: null,
-      setAuth: (user, token) => set({ user, token }),
-      setUser: (user) => set((state) => ({ 
-        user: state.user ? { ...state.user, ...user} : null,
+      setUser: (user) => set({ user }),
+      updateUser: (data) => set((state) => ({ 
+        user: state.user ? { ...state.user, ...data} : null,
       })),
       logout: () => {
-        set({ user: null, token: null });
+        set({ user: null });
       },
     }),
     {
-      name: "auth-storage",
+      name: "auth-user",
     }
   )
 );

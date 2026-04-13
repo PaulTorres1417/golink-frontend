@@ -15,11 +15,16 @@ const PostThread = lazy(() => import('./pages/post/PostThread').then(m => ({ def
 const CommentThread = lazy(() => import('./pages/post/CommentThread').then(m => ({ default: m.CommentThread })))
 const Profile = lazy(() => import('./pages/profile/Profile').then(m => ({ default: m.Profile })))
 const ProfileGlobal = lazy(() => import('./pages/profile/ProfileGlobal').then(m => ({ default: m.ProfileGlobal })))
+const AuthCallback = lazy(() => import('./pages/auth/AuthCallback'));
 
 export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/auth/callback", 
+    element: <AuthCallback />,
   },
   {
     path: "/",

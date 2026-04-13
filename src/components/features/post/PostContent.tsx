@@ -189,11 +189,13 @@ export const PostContent = ({ data, isLCP = false }: Props) => {
         {data.media && (
           <ContainerMedia>
             {data.media.media_type === 'video' ? (
+              <VideoWrapper>
               <PostFeedVideo 
                src={data.media.url} 
                theme={theme} 
                isLCP={isLCP}
               />
+              </VideoWrapper>
             ) : (
               <img 
                src={data.media.url} 
@@ -227,6 +229,7 @@ const ContainerMedia = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   position: relative;
+  aspect-ratio: 16/9;
 
   img {
     display: block;
@@ -275,6 +278,20 @@ const Content = styled.p`
   line-height: 20px;
   text-rendering: optimizeLegibility;
   box-sizing: border-box;
+`;
+
+const VideoWrapper = styled.div`
+  width: 100%;
+  aspect-ratio: 16/9;  
+  border-radius: 16px;
+  overflow: hidden;
+  background: ${({ theme }) => theme === 'dark' ? '#000' : '#f0f0f0'};
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const Container = styled.div`

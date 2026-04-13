@@ -27,7 +27,7 @@ export const Container = styled.div`
   align-items: center;
   overflow: hidden;
   padding: 20px;
-  background: #000;
+  background: #fff;
 
   ${sm`
     padding: 16px;
@@ -141,7 +141,7 @@ export const BrandName = styled.h1`
 
 export const BrandTagline = styled.p`
   font-size: 22px;
-  color: #fff;
+  color: #000;
   font-weight: 200;
 
   ${sm`
@@ -151,11 +151,11 @@ export const BrandTagline = styled.p`
 
 export const FormCard = styled.div`
   position: relative;
-  background: #000;
+  background: #fff;
   backdrop-filter: blur(20px);
   padding: 48px;
   border-radius: 24px;
-  border: 1px solid #595d6284;
+  border: 1px solid #9ea3a984;
   box-shadow:
     0 25px 50px -12px rgba(0, 0, 0, 0.1),
     0 10px 20px -5px rgba(0, 0, 0, 0.05);
@@ -194,7 +194,7 @@ export const WelcomeText = styled.p`
 export const Title = styled.h2`
   font-size: 28px;
   font-weight: 700;
-  color: #fff;
+  color: #000;
   margin: 0;
 
   ${sm`
@@ -276,8 +276,8 @@ export const Input = styled.input`
   width: 100%;
   padding: 14px 16px 14px 48px;
   font-size: 15px;
-  color: #fff;
-  background: #000;
+  color: #000;
+  background: #fff;
   border: 1px solid #595d6284;
   border-radius: 12px;
   transition: all 0.3s ease;
@@ -288,9 +288,8 @@ export const Input = styled.input`
 
   &:focus {
     outline: none;
-    background: #000;
+    background: #fff;
     border-color: #3b82f6;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
   }
 
   ${sm`
@@ -305,13 +304,12 @@ export const Button = styled.button`
   margin-top: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: white;
-  background: #000;
-  border: 1px solid #64748b;
+  color: #fff;
+  background: linear-gradient(120deg, #407ddfff 0%, #7453d6ff 100%);;
+  border: 1px solid #3b82f6;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -386,35 +384,26 @@ export const DividerText = styled.span`
 `;
 
 export const SocialButtons = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 `;
 
 export const SocialButton = styled.button`
-  padding: 12px;
+  width: 100%;
+  height: 40px;
+  padding: 5px;
+  font-family: Google Sans Text, Roboto, Arial, sans-serif;
   background: #f8fafc;
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-  color: #475569;
+  border: 1px solid #9ea3a984;
+  border-radius: 30px;
+  color: #545252ff;
   cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
+  gap: 10px;
   align-items: center;
   justify-content: center;
-
-  &:hover {
-    background: #ffffff;
-    border-color: #94a3b8;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  @media (hover: none) {
-    &:hover {
-      transform: none;
-    }
   }
 `;
 

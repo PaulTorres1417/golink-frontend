@@ -71,6 +71,7 @@ export const PostFeedVideo = ({
 
 const Host = styled.div<{ $theme: string; $variant: Variant }>`
   width: 100%;
+  height: 100%;
   max-width: 100%;
   border-radius: ${({ $variant }) => ($variant === "compact" ? "10px" : "16px")};
   overflow: hidden;
@@ -80,7 +81,7 @@ const Host = styled.div<{ $theme: string; $variant: Variant }>`
   video {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: contain;
     border-radius: ${({ $variant }) => ($variant === "compact" ? "10px" : "16px")};
     vertical-align: top;

@@ -11,16 +11,17 @@ import {
   Label, LabelRow, SignUpLink, SocialButton, SocialButtons, Title, WelcomeText, Imagen
 } from "./Login.styles";
 import {
-  ArrowIcon, GithubIcon, GoogleIcon, LockIcon, MailIcon, TwitterIcon,
+  ArrowIcon, GithubIcon, GoogleIcon, LockIcon, MailIcon,
 } from "./Login.icons";
-import loginhero from '../../../public/loginhero.png';
+import loginherowhite from '../../../public/loginherowhite.png';
+import { TokenStore } from '@/store/auth/tokenStore';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [login] = useMutation<LoginData, LoginVariable>(LOGIN_MUTATION);
   const navigate = useNavigate();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const setUser = useAuthStore((state) => state.setUser);
 
   useEffect(() => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -47,13 +48,21 @@ export default function Login() {
       const user = result.data?.login.user;
 
       if (!token || !user) throw new Error('No se recibio user o token');
-      setAuth(user, token);
+      TokenStore.set(token);
+      setUser(user);
       navigate('/');
 
     } catch (error) {
       console.error('Error al loguearse', error);
       throw new Error('Error al loguearse');
     }
+  };
+  // -- OAuth --
+  const handleGoogle = () => {
+    window.location.href = 'http://localhost:4000/auth/google';
+  };
+  const handleGithub = () => {
+    window.location.href = 'http://localhost:4000/auth/github';
   };
 
   return (
@@ -67,7 +76,7 @@ export default function Login() {
           <BrandName><span>GO</span>LINX</BrandName>
           <BrandTagline>Conecta con personas, comparte tu trabajo y crea oportunidades.</BrandTagline>
           <Imagen>
-            <img src={loginhero} alt="" />
+            <img src={loginherowhite} alt="" />
           </Imagen>
         </BrandSection>
 
@@ -120,14 +129,13 @@ export default function Login() {
 
           <Divider>
             <DividerLine />
-            <DividerText>o continúa con</DividerText>
+            <DividerText>or</DividerText>
             <DividerLine />
           </Divider>
 
           <SocialButtons>
-            <SocialButton type="button">{GoogleIcon}</SocialButton>
-            <SocialButton type="button">{TwitterIcon}</SocialButton>
-            <SocialButton type="button">{GithubIcon}</SocialButton>
+            <SocialButton type="button" onClick={handleGoogle}>{GoogleIcon}Register with Google</SocialButton>
+            <SocialButton type="button" onClick={handleGithub}>{GithubIcon}Register with Github</SocialButton>
           </SocialButtons>
 
           <FooterText>

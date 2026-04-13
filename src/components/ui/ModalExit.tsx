@@ -4,6 +4,7 @@ import { FaPowerOff } from "react-icons/fa6";
 import { useAuthStore, usePostStore, useTheme, useSavedPostStore } from '@/store';
 import { useNavigate } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client/react';
+import { TokenStore } from '@/store/auth/tokenStore';
 
 interface ModalProps {
   setIsModalOpen: (value: boolean) => void;
@@ -30,12 +31,18 @@ export const ModalExit = ({ setIsModalOpen, isCollapsed }: ModalProps) => {
     return () => document.removeEventListener("click", handleClickOustside);
   }, [setIsModalOpen])
 
-  const handleClickExit = () => {
+  const handleClickExit = async () => {
+    await fetch('http://localhost:4000/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
+    })
     clearSavedPost()
     logout();
     resetPost();
     localStorage.removeItem("auth-storage");
     client.clearStore();
+
+    TokenStore.clear();
     navigate('/login');
   }
   return (
