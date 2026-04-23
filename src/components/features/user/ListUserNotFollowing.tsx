@@ -1,67 +1,12 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import { gql } from '@apollo/client';
-import { useMutation } from '@apollo/client/react';
-import { useTheme } from '@/store/theme';
 import { FaUserCircle } from "react-icons/fa";
-import type { ListUserProps, UserFollowResponse, UserUnFollowResponse } from './types';
-
-const FOLLOW_USER = gql`
-  mutation Follow_User($userId: ID!) {
-    followUser(userId: $userId)
-  }
-`;
-const UNFOLLOW_USER = gql`
-  mutation UnFollow_User($userId: ID!) {
-    unFollowUser(userId: $userId)
-  }
-`;
+import type { ListUserProps } from './types';
+import { useListUserNotFollowing } from '@/hooks/user/useListUserNotFollowing';
+import { getDisplayName } from '@/utils/user/user';
 
 export const ListUserNotFollowing = ({ data }: ListUserProps) => {
-  const [isHovering, setIsHovering] = useState<boolean>(false);
-  const [isFollow, setIsFollow] = useState<boolean>(false);
-  const [ignoreHover, setIgnoreHover] = useState<boolean>(false);
-  const { theme } = useTheme();
-  const [Follow_User] = useMutation<UserFollowResponse>(FOLLOW_USER);
-  const [UnFollow_User] = useMutation<UserUnFollowResponse>(UNFOLLOW_USER);
-
-  const handleClickFollow = async (id: string) => {
-    if (!isFollow) {
-      try {
-        const res = await Follow_User({ variables: { userId: id } });
-        if (res.data?.followUser) {
-          setIsFollow(true);
-        }
-      } catch (error) {
-        console.error('Error al seguir usuario:', error);
-      }
-    } else {
-      try {
-        await UnFollow_User({ variables: { userId: id } });
-        setIsFollow(false);
-        setIsHovering(false);
-        setIgnoreHover(true);
-      } catch (error) {
-        console.error('Error al dejar de seguir:', error);
-      }
-    }
-  };
-
-  const handleMouseEnter = () => {
-    if (!ignoreHover) {
-      setIsHovering(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-    setIgnoreHover(false);
-  };
-
-  const getButtonText = () => {
-    if (!isFollow) return 'Follow';
-    return (isHovering && !ignoreHover) ? 'Unfollow' : 'Following';
-  };
+  const { getButtonText, handleClickFollow, handleMouseEnter,
+    handleMouseLeave, isFollow, isHovering, theme } = useListUserNotFollowing();
 
   return (
     <List key={data.id}>
@@ -73,11 +18,7 @@ export const ListUserNotFollowing = ({ data }: ListUserProps) => {
         )}
         <Information $themeMode={theme}>
           <span>
-            {data.name
-              .split("@")[0]
-              .slice(0, 13)
-              .concat(data.name.split("@")[0].length > 13 ? "..." : "")
-            }
+            {getDisplayName(data.name)}
           </span>
           <span>
             @{data.email.split("@")[0].length > 13

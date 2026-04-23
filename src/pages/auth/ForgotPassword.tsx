@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 import { IoIosArrowBack } from "react-icons/io";
 import { Spinner } from "@/components/ui";
@@ -63,6 +63,17 @@ export default function ForgotPassword() {
   );
 }
 
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+`;
+
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
@@ -83,6 +94,8 @@ const ModalCard = styled.div`
   margin-top: 80px;
   max-width: 550px;
   position: relative;
+
+  animation: ${fadeInUp} 0.25s ease-out;
 
   @media (max-width: 480px) {
     padding: 24px 20px;

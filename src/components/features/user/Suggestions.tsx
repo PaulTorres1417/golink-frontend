@@ -1,29 +1,10 @@
 import styled from 'styled-components';
-import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { Spinner } from '@/components/ui';
 import { useTheme } from '@/store/theme';
 import { ListUserNotFollowing } from './ListUserNotFollowing';
-
-const GET_ALL_USERS = gql`
-  query GetUsersAll {
-    getAllUsers {
-      id
-      name
-      email
-      avatar
-    }
-  }
-`;
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string | null;
-};
-type UserListProps = {
-  getAllUsers: User[];
-}
+import type { User, UserListProps } from './types';
+import { GET_ALL_USERS } from '@/graphql/query/user/getAllUsers';
 
 export const Suggestions = () => {
   const { data, error, loading } = useQuery<UserListProps>(GET_ALL_USERS);

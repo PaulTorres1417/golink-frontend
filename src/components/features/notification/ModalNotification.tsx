@@ -1,69 +1,24 @@
-import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FaUserCircle } from 'react-icons/fa';
-import { useMutation } from '@apollo/client/react';
-import { gql } from '@apollo/client';
 import { dayjs } from '@/utils';
 import { HiMiniHeart } from "react-icons/hi2";
 import { FaCommentDots } from "react-icons/fa6";
 import { FaComments } from "react-icons/fa6";
 import { BiRepost } from "react-icons/bi";
-import { useTheme, useNotificationStore } from '@/store';
 import { Spinner } from '@/components/ui';
-
-interface ModelProps {
-  setIsOpenNotification: (value: boolean) => void;
-  handleFetchMore: () => void;
-  isPending: boolean;
-}
-
-const SHOW_AS_READ = gql`
-  mutation show_As_Read($notificationId: ID!) {
-    showAsRead(notificationId: $notificationId)
-  }
-`;
+import { useModalNotification } from '@/hooks/modal/useModalNotification';
+import type { ModelProps } from './types';
+import { getDisplayName } from '@/utils/user/user';
 
 export const ModalNotification = ({ setIsOpenNotification, handleFetchMore, isPending }: ModelProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { notifications, resetCount, pageInfo } = useNotificationStore();
-  const [show_As_Read] = useMutation(SHOW_AS_READ);
-  const { theme } = useTheme();
+  const { notifications, pageInfo, ref, theme } = useModalNotification({ setIsOpenNotification });
 
-  useEffect(() => {
-    if (notifications.length > 0) {
-      resetCount();
-    }
-  }, [notifications]);
-
-  useEffect(() => {
-    const showAsRead = async () => {
-      for (const element of notifications) {
-        if (!element.read) {
-          try {
-            await show_As_Read({ variables: { notificationId: element.id } });
-          } catch (error) {
-            console.error('Error al marcar como leidas', error);
-            throw new Error('Error al read notifications views');
-          }
-        }
-      }
-    }
-    if (notifications.length > 0) showAsRead();
-  }, [notifications])
-
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setIsOpenNotification(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [setIsOpenNotification]);
+  const handleCLick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  }
 
   return (
-    <Container ref={ref} $themeColor={theme} onClick={(e) => e.stopPropagation()}>
+    <Container ref={ref} $themeColor={theme} onClick={handleCLick}>
       <Header>Notifications</Header>
 
       <NotificationList>
@@ -80,24 +35,22 @@ export const ModalNotification = ({ setIsOpenNotification, handleFetchMore, isPe
                 )}
                 <NotificationContent>
                   <NotificationText>
-                    <strong>{(() => {
-                      const parts = notification.actor_id.name.split(" ");
-                      const firstName = parts[0];
-                      const full = `${firstName}`;
-                      return full.length > 17 ? full.slice(0, 17) + "..." : full;
-                    })()}</strong>{" "}{notification.type.split("_").join(" ").toLocaleLowerCase()}.
+                    <strong>
+                      {getDisplayName(notification.actor_id.name)}
+                    </strong>
+                    {" "}{notification.type.split("_").join(" ").toLocaleLowerCase()}.
                   </NotificationText>
                   <NotificationTime>{dayjs(notification.created_at).fromNow(true)}</NotificationTime>
                 </NotificationContent>
                 {
                   notification.type === 'LIKED_YOUR_POST' || notification.type === 'LIKED_YOUR_COMMENT'
-                    ? <HiMiniHeart size={25} style={{ color: '#c3686fff'}}/>
+                    ? <HiMiniHeart size={25} style={{ color: '#c3686fff' }} />
                     : notification.type === 'COMMENTED_ON_YOUR_POST'
-                      ? <FaCommentDots size={25} style={{ color: '#7ca2c6ff'}}/>
+                      ? <FaCommentDots size={25} style={{ color: '#7ca2c6ff' }} />
                       : notification.type === 'REPLIED_TO_YOUR_COMMENT'
-                        ? <FaComments size={25} style={{ color: '#79a5ceff'}}/>
+                        ? <FaComments size={25} style={{ color: '#79a5ceff' }} />
                         : notification.type === 'REPOSTED_YOUR_POST' || notification.type === 'REPOSTED_YOUR_COMMENT'
-                          ? <BiRepost size={25} style={{ color: '#74b593ff'}}/>
+                          ? <BiRepost size={25} style={{ color: '#74b593ff' }} />
                           : null
                 }
               </NotificationItem>
@@ -110,7 +63,7 @@ export const ModalNotification = ({ setIsOpenNotification, handleFetchMore, isPe
       {/* buttom show more */}
       {pageInfo?.hasNextPage && (
         <ViewMoreButton onClick={handleFetchMore}>
-          { isPending ? <Spinner /> : "see more..."}
+          {isPending ? <Spinner /> : "see more..."}
         </ViewMoreButton>
       )}
     </Container>

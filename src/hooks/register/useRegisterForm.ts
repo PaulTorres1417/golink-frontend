@@ -34,6 +34,7 @@ export const useRegisterForm = (isOpen: boolean, onClose: () => void) => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [birth, setBirth] = useState({ day: "", month: "", year: "" });
+  const [success, setSuccess] = useState(false);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -43,6 +44,7 @@ export const useRegisterForm = (isOpen: boolean, onClose: () => void) => {
       newErrors.email = "Invalid email format";
     if (!form.password.trim()) newErrors.password = "Password is required";
     else if (form.password.length < 6) newErrors.password = "Minimum 6 characters";
+
     if (!birth.day || !birth.month || !birth.year) newErrors.birth = "Birth date is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -61,10 +63,14 @@ export const useRegisterForm = (isOpen: boolean, onClose: () => void) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+
     try {
       const birthday = `${birth.year}-${birth.month.padStart(2, "0")}-${birth.day.padStart(2, "0")}`;
       const { data } = await Create_Register({ variables: { ...form, birthday } });
-      if (data?.register) onClose();
+      if (data?.register) {
+        setSuccess(true);
+      };
+
     } catch (err: any) {
       console.error('Register error:', err.message);
       const gqlError = err?.graphQLErrors?.[0];
@@ -86,7 +92,7 @@ export const useRegisterForm = (isOpen: boolean, onClose: () => void) => {
   }, [isOpen]);
 
   return {
-    form, errors, birth, loading,
-    handleChange, handleBirthChange, handleSubmit,
+    form, errors, birth, loading, success,
+    handleChange, handleBirthChange, handleSubmit, 
   };
 };

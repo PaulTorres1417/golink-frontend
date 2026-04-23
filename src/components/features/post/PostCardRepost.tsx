@@ -1,10 +1,9 @@
 import styled from "styled-components";
 import { FaUserCircle } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { useTheme } from "@/store/theme";
 import { PostFeedVideo } from "./PostFeedVideo";
 import type { Post } from "./types";
 import type { CommentProps } from "@/pages/post/types";
+import { useRepost } from "@/hooks/repost/useRepost";
 
 type Props = {
   original_post: Post | null;
@@ -12,56 +11,21 @@ type Props = {
 }
 
 export const RepostCard = ({ original_post, original_comment }: Props) => {
-  const navigate = useNavigate();
-  const { theme } = useTheme();
-  if (!original_post && !original_comment) return null;
-
-  const data = original_post ?? original_comment!;
-
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (original_post) {
-      navigate(`post/${original_post.id}`, {
-        state: {
-          postData: {
-            kind: 'Post' as const,
-            ...original_post,
-            clientId: original_post.id,
-            original_post: null,
-            original_comment: null,
-            initialReaction: false,
-            has_viewed: false,
-            isSaved: false,
-            isRepost: false,
-            comments: 0,
-            view_count: 0,
-            count_repost: 0,
-            countReaction: 0,
-          }
-        }
-      })
-    } else if (original_comment) {
-      navigate(`post/${original_comment.post_id.id}/comment/${original_comment.id}`, {
-        state: {
-          commentData: { kind: 'Comment' as const, ...original_comment },
-          postData: original_comment.post_id
-        }
-      })
-    }
-  }
+  const { handleClick, theme } = useRepost({ post: original_post, comment: original_comment });
+  const data = original_post ?? original_comment;
+  
   return (
     <Card onClick={handleClick}>
       <Header>
         <Avatar>
-          {data.user_id.avatar
+          {data?.user_id.avatar
             ? <img src={data.user_id.avatar} alt="avatar" />
             : <FaUserCircle size={18} />}
         </Avatar>
-        <Name>{data.user_id.name}</Name>
-        <Handle>@{data.user_id.email?.split("@")[0]}</Handle>
+        <Name>{data?.user_id.name}</Name>
+        <Handle>@{data?.user_id.email?.split("@")[0]}</Handle>
       </Header>
-      <Content>{data.content}</Content>
+      <Content>{data?.content}</Content>
       {original_post?.media && (
         <Media>
           {original_post.media.media_type === 'video' ? (

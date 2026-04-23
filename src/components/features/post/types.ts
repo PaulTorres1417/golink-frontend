@@ -92,36 +92,6 @@ export interface PostQueryProps {
   isRepost: boolean;
 }
 
-export type ReactionPostSubscription = {
-  reactionPost: {
-    id: string;
-    post_id: {
-      id: string;
-    };
-    user_id: {
-      id: string;
-    };
-    action: string;
-  }
-}
-
-export type PostViewedSubscription = {
-  postViewed: {
-    id: string;
-    view_count: number;
-    user_id: {
-      id: string;
-    }
-  }
-}
-
-export type PostRepostCount = {
-  postRepost: {
-    id: string;
-    count_repost: number;
-  }
-}
-
 export type CommentType = {
   kind: 'Comment';
   id: string;
@@ -177,27 +147,3 @@ export type PostType = {
   isRepost: boolean;
 }
 
-export type CreateViewProps = {
-  createViewPost: {
-    id: string;
-    view_count: number;
-    has_viewed: boolean;
-  }
-}
-export type CreateViewVars = {
-  postId: string;
-}
-
-export interface FeedPostsData {
-  feedPosts: {
-    __typename?: string;
-    edges: {
-      node: PostQueryProps;
-      cursor: string;
-    }[];
-    pageInfo: {
-      endCursor: string;
-      hasNextPage: boolean;
-    };
-  };
-}

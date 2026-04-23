@@ -7,6 +7,7 @@ import { dayjs } from '@/utils';
 import { PostDetailAction } from "../post/detail/PostDetailAction";
 import type { CommentType } from "./types";
 import { CREATE_VIEW_COMMENT } from "@/graphql/mutation";
+import { getDisplayName } from "@/utils/user/user";
 
 export const Comment = ({ comment, post }: CommentType) => {
   const { user_id, content, created_at, has_viewed } = comment;
@@ -54,13 +55,7 @@ export const Comment = ({ comment, post }: CommentType) => {
 
         <TextContent>
           <UserName>
-            <div><p>{(() => {
-              const parts = user_id.name.split(" ");
-              const firstName = parts[0];
-              const lastName = parts[1] ?? "";
-              const full = lastName ? `${firstName} ${lastName}` : firstName;
-              return full.length > 17 ? full.slice(0, 17) + "..." : full;
-            })()}</p></div>
+            <div><p>{getDisplayName(user_id.name)}</p></div>
             <Email $themeMode={theme}>@{user_id.email ? user_id.email.split("@")[0] : "anonimus"}</Email>
             <Time $themeMode={theme}>&middot;<span>{dayjs(created_at).fromNow(true)}</span></Time>
           </UserName>

@@ -1,12 +1,10 @@
 import styled from 'styled-components';
-import { useEffect, useRef } from 'react';
-import { gql } from '@apollo/client';
-import { useMutation } from '@apollo/client/react';
-import { useTheme, useFollowerStore } from '@/store';
 import { Spinner } from '@/components/ui';
 import { dayjs } from '@/utils';
 import { FaUserCircle } from 'react-icons/fa';
 import { PiStarFourFill } from "react-icons/pi";
+import { useModalFollower } from '@/hooks/modal/useModalFollower';
+import { getDisplayName } from '@/utils/user/user';
 
 
 interface ModelProps {
@@ -15,50 +13,10 @@ interface ModelProps {
   isPendingFollower: boolean;
 }
 
-const SHOW_AS_READ = gql`
-  mutation show_As_Read($notificationId: ID!) {
-    showAsRead(notificationId: $notificationId)
-  }
-`;
-
-export const ModalFollower = ({ setIsOpenFollower, FetchMoreFollower, isPendingFollower }: ModelProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { followers, resetCount, pageInfoFollower } = useFollowerStore();
-  const [show_As_Read] = useMutation(SHOW_AS_READ);
-  const { theme } = useTheme();
-
-  useEffect(() => {
-    if (followers.length > 0) {
-      resetCount();
-    }
-  }, [followers]);
-
-  useEffect(() => {
-    const showAsRead = async () => {
-      for (const element of followers) {
-        if (!element.read) {
-          try {
-            await show_As_Read({ variables: { notificationId: element.id } });
-          } catch (error) {
-            console.error('Error al marcar como leidas', error);
-            throw new Error('Error al read notifications views');
-          }
-        }
-      }
-    }
-    if (followers.length > 0) showAsRead();
-  }, [followers])
-
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setIsOpenFollower(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [setIsOpenFollower]);
+export const ModalFollower = ({ setIsOpenFollower, FetchMoreFollower, 
+  isPendingFollower }: ModelProps) => {
+    
+  const { followers, pageInfoFollower, theme, ref } = useModalFollower({ setIsOpenFollower });
 
   return (
     <Container ref={ref} $themeColor={theme} onClick={(e) => e.stopPropagation()}>
@@ -78,12 +36,8 @@ export const ModalFollower = ({ setIsOpenFollower, FetchMoreFollower, isPendingF
                 )}
                 <NotificationContent>
                   <NotificationText>
-                    <strong>{(() => {
-                      const parts = notification.actor_id.name.split(" ");
-                      const firstName = parts[0];
-                      const full = `${firstName}`;
-                      return full.length > 17 ? full.slice(0, 17) + "..." : full;
-                    })()}</strong>{" "}{notification.type.split("_").join(" ").toLocaleLowerCase()}.
+                    <strong>{getDisplayName(notification.actor_id.name)}</strong>
+                    {" "}{notification.type.split("_").join(" ").toLocaleLowerCase()}.
                   </NotificationText>
                   <NotificationTime>{dayjs(notification.created_at).fromNow(true)}</NotificationTime>
                 </NotificationContent>
@@ -95,7 +49,7 @@ export const ModalFollower = ({ setIsOpenFollower, FetchMoreFollower, isPendingF
           <EmptyState>There are no followers...</EmptyState>
         )}
       </NotificationList>
-      {/* Buttom Ver más */}
+      {/* Buttom show more */}
       {pageInfoFollower?.hasNextPage && (
         <ViewMoreButton onClick={FetchMoreFollower}>
           { isPendingFollower ? <Spinner /> : "see more..."}

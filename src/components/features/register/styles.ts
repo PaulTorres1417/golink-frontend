@@ -301,3 +301,37 @@ export const ErrorMsg = styled.span`
   font-weight: 500;
   margin-top: -2px;
 `;
+
+export const SuccessContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  color: #fff;
+  text-align: center;
+`;
+
+export const SuccessText = styled.p`
+  font-size: 15px;
+  color: #64748b;
+  letter-spacing: 0.3px;
+  line-height: 1.5;
+`;
+
+export const CloseBtn = styled.button`
+  margin-top: 8px;
+  padding: 13px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(120deg, #407ddf 0%, #7453d6 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+`;

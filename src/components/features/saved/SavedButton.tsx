@@ -7,11 +7,10 @@ type SavedButtonProps = {
   toggleSaved: () => void
 }
 export const SavedButton = ({ isSaved, toggleSaved }: SavedButtonProps) => {
-const { theme } = useTheme();
+  const { theme } = useTheme();
 
-  function handleSavePost() {
-    toggleSaved();
-  }
+  const handleSavePost = () => toggleSaved();
+
   return (
     <Action
       className="saved"
@@ -22,13 +21,14 @@ const { theme } = useTheme();
       <Inner>
         {
           isSaved
-            ? <MdBookmark size={24} /> 
+            ? <MdBookmark size={24} />
             : <MdBookmarkBorder size={24} />
         }
       </Inner>
     </Action>
   )
 }
+
 const Inner = styled.div`
   display: flex;
   align-items: center;
@@ -45,11 +45,11 @@ const Action = styled.div<{ $themeMode: string, $isSaved: boolean }>`
   justify-content: space-between;
   cursor: pointer;
   color: ${({ $themeMode, $isSaved }) =>
-  $isSaved 
-  ? '#1d9bf0'
-    : ($themeMode === 'dark'
-      ? 'rgba(113, 118, 123, 1)'
-      : 'rgba(83, 100, 113, 1)')};
+    $isSaved
+      ? '#1d9bf0'
+      : ($themeMode === 'dark'
+        ? 'rgba(113, 118, 123, 1)'
+        : 'rgba(83, 100, 113, 1)')};
 
   &.saved:hover ${Inner} {
     color: #1d9bf0;

@@ -17,17 +17,21 @@ export const PostForm = ({ hideAvatar, data, onClose, border }: PostFormProps) =
     fileInputRef, handleRemoveFile, handleCreatePost } = useCreatePost(data, onClose);
   const user = useAuthStore((state) => state.user);
   const { theme } = useTheme();
-  const size = "50px";
   const isRepost = data?.type ? true : false;
 
-  if (!user) return null;
   return (
     <Container $isRepost={isRepost} $theme={theme} $border={border}>
       {!hideAvatar 
-        && <AvatarForm url={user.avatar || null} />
+        && <AvatarForm url={user?.avatar || null} />
       }
       <TextContainer>
-        <Editor text={text} setText={setText} name={user.name} size={size} data={data?.type} />
+        <Editor 
+         text={text} 
+         setText={setText} 
+         name={user?.name} 
+         size={'50px'} 
+         data={data?.type} 
+        />
         {
           previewUrl && (
             <PreviewContainer>
