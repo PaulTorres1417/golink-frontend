@@ -89,10 +89,10 @@ const IconWrapper = styled.div<{
     ? 'rgb(249, 24, 128)'
       : $isColor
         ? ($theme === 'dark'
-          ? 'rgba(113, 118, 123, 1)'
+          ? '#a8b3cfbe'
           : 'rgba(83, 100, 113, 1)')
         : ($theme === 'dark'
-          ? 'rgba(113, 118, 123, 1)'
+          ? '#a8b3cfbe'
           : 'rgba(83, 100, 113, 1)')
   };
 `;

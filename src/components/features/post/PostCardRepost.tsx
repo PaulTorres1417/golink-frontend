@@ -140,7 +140,7 @@ const Media = styled.div`
 
   img {
     width: 100%;
-    max-height: 280px;
+    height: 100%;
     object-fit: cover;
     display: block;
     border-radius: 10px;

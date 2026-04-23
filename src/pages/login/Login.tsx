@@ -3,32 +3,52 @@ import { useMutation } from '@apollo/client/react';
 import { useNavigate } from 'react-router-dom';
 import type { LoginData, LoginVariable } from './types';
 import { LOGIN_MUTATION } from './types';
+import { MdErrorOutline } from "react-icons/md";
 import { useAuthStore } from '@/store/auth';
 import {
-  BackgroundPattern, BrandName, BrandSection, BrandTagline, Button, ButtonIcon,
+  BackgroundPattern, BrandName, BrandSection, BrandTagline, Button, ButtonIcon, MessageGlobal,
   Container, ContentWrapper, Divider, DividerLine, DividerText, FooterText, ForgotLink,
-  Form, FormCard, FormHeader, GlowEffect, Input, InputGroup, InputIcon, InputWrapper,
-  Label, LabelRow, SignUpLink, SocialButton, SocialButtons, Title, WelcomeText, Imagen
-} from "./Login.styles";
+  Form, FormCard, FormHeader, Input, InputGroup, InputIcon, InputWrapper, ErrorMsg,
+  Label, LabelRow, SignUpLink, SocialButton, SocialButtons, Title, WelcomeText, Video
+} from "./styles";
 import {
   ArrowIcon, GithubIcon, GoogleIcon, LockIcon, MailIcon,
-} from "./Login.icons";
-import loginherowhite from '../../../public/loginherowhite.png';
+} from '@/assets/icon/Icon';
+import loginhero from '@public/hero.mp4';
 import { TokenStore } from '@/store/auth/tokenStore';
+import { ModalRegister } from '@components/features/register/ModalRegister';
+import { Spinner } from '@/components/ui';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [login] = useMutation<LoginData, LoginVariable>(LOGIN_MUTATION);
+  const [globalError, setGlobalError] = useState<string>('');
+  const [login, { loading }] = useMutation<LoginData, LoginVariable>(LOGIN_MUTATION);
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
+  const [showRegister, setShowRegister] = useState<boolean>(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(email))
+      newErrors.email = "Invalid email format";
+    if (!password.trim()) newErrors.password = "Password is required";
+    else if (password.length < 6) newErrors.password = "Minimum 6 characters";
+
+    setErrors(newErrors);
+    setGlobalError('');
+    return Object.keys(newErrors).length === 0;
+  };
 
   useEffect(() => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const currentBodyBg = document.body.style.background;
 
-    document.documentElement.setAttribute('data-theme', 'light');
-    document.body.style.background = '#ffffff';
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.body.style.background = '#131420';
 
     return () => {
       if (currentTheme) {
@@ -42,22 +62,33 @@ export default function Login() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
+    setErrors({});
+    setGlobalError('');
     try {
-      const result = await login({ variables: { email, password } });
-      const token = result.data?.login.token;
-      const user = result.data?.login.user;
+      const { data } = await login({ variables: { email, password } });
 
-      if (!token || !user) throw new Error('No se recibio user o token');
-      TokenStore.set(token);
-      setUser(user);
+      if (data?.login.user && data.login.token) {
+        TokenStore.set(data.login.token);
+        setUser(data.login.user);
+      }
       navigate('/');
 
-    } catch (error) {
-      console.error('Error al loguearse', error);
-      throw new Error('Error al loguearse');
+    } catch (error: any) {
+      const gqlError = error?.graphQLErrors?.[0];
+      if (gqlError && gqlError.extensions?.field) {
+        setErrors((prev) => ({
+          ...prev,
+          [gqlError.extensions.field]: gqlError.message,
+        }));
+      } else {
+        setGlobalError(
+          gqlError?.message || error?.message || 'Something went wrong'
+        );
+      }
     }
   };
-  // -- OAuth --
+  {/* OAuth */ }
   const handleGoogle = () => {
     window.location.href = 'http://localhost:4000/auth/google';
   };
@@ -65,65 +96,88 @@ export default function Login() {
     window.location.href = 'http://localhost:4000/auth/github';
   };
 
+  const handleClickForgot = () => {
+    navigate('/forgot-password');
+  }
   return (
     <Container>
       <BackgroundPattern />
-      <GlowEffect className="glow-1" />
-      <GlowEffect className="glow-2" />
 
       <ContentWrapper>
         <BrandSection>
           <BrandName><span>GO</span>LINX</BrandName>
-          <BrandTagline>Conecta con personas, comparte tu trabajo y crea oportunidades.</BrandTagline>
-          <Imagen>
-            <img src={loginherowhite} alt="" />
-          </Imagen>
+          <BrandTagline>Connect with people, share your work and create opportunities.</BrandTagline>
+          <Video>
+            <video autoPlay muted playsInline preload="auto">
+              <source src={loginhero} type="video/mp4" />
+            </video>
+          </Video>
         </BrandSection>
 
         <FormCard>
+          <MessageGlobal $visible={!!globalError}>
+            <MdErrorOutline size={20} />
+            <span>Invalid credentials</span>
+          </MessageGlobal>
           <FormHeader>
-            <WelcomeText>Bienvenido de nuevo</WelcomeText>
-            <Title>Accede a tu cuenta</Title>
+            <Title>Sign in</Title>
+            <WelcomeText>New user?
+              <SignUpLink onClick={() => setShowRegister(true)}>
+                {' '}Create an account
+              </SignUpLink>
+            </WelcomeText>
           </FormHeader>
 
-          <Form onSubmit={handleLogin}>
+          <Form onSubmit={handleLogin} noValidate>
             <Field
-              label="Correo electrónico"
-              icon={MailIcon}
+              icon={<MailIcon />}
               input={
                 <Input
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="nombre@empresa.com"
-                  required
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) setErrors({ ...errors, email: "" });
+                  }}
+                  placeholder="Email address"
+                  $error={!!errors.email}
                 />
               }
+              footer={errors.email && <ErrorMsg>{errors.email}</ErrorMsg>}
             />
 
             <Field
-              label={
-                <LabelRow>
-                  <Label>Contraseña</Label>
-                  <ForgotLink>¿Olvidaste tu contraseña?</ForgotLink>
-                </LabelRow>
-              }
-              icon={LockIcon}
+              icon={<LockIcon />}
               input={
                 <Input
                   type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
-                  required
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) setErrors({ ...errors, password: "" });
+                  }}
+                  placeholder="Password"
+                  $error={!!errors.password}
                 />
               }
+              footer={
+                <>
+                  {errors.password && <ErrorMsg>{errors.password}</ErrorMsg>}
+                  <LabelRow>
+                    <ForgotLink onClick={handleClickForgot}>Forgot password?</ForgotLink>
+                  </LabelRow>
+                </>
+              }
             />
-            <Button type="submit">
-              Iniciar Sesión
-              <ButtonIcon>
-                {ArrowIcon}
-              </ButtonIcon>
+            <Button type="submit" disabled={loading}>
+              {loading ? <Spinner color={'#fff'}/> : 'Sign in'}
+              {
+                !loading && (
+                  <ButtonIcon>
+                    <ArrowIcon />
+                  </ButtonIcon>
+                )
+              }
             </Button>
           </Form>
 
@@ -134,31 +188,60 @@ export default function Login() {
           </Divider>
 
           <SocialButtons>
-            <SocialButton type="button" onClick={handleGoogle}>{GoogleIcon}Register with Google</SocialButton>
-            <SocialButton type="button" onClick={handleGithub}>{GithubIcon}Register with Github</SocialButton>
+            <SocialButton type="button" onClick={handleGoogle}>
+              <span className="icon">{<GoogleIcon />}</span>
+              <p>Register with Google</p>
+            </SocialButton>
+
+            <SocialButton type="button" onClick={handleGithub}>
+              <span className="icon">{<GithubIcon />}</span>
+              <p>Register with Github</p>
+            </SocialButton>
+
           </SocialButtons>
 
           <FooterText>
-            ¿No tienes cuenta? <SignUpLink>Regístrate aquí</SignUpLink>
+            By signing in, you agree to our<br />
+            <span>Terms of Service</span>{" "}
+            and{" "}
+            <span>Privacy Policy.</span>
           </FooterText>
         </FormCard>
       </ContentWrapper>
+      {
+        <ModalRegister
+          isOpen={showRegister}
+          onClose={() => setShowRegister(false)}
+          onSwitchToLogin={() => setShowRegister(false)}
+        />
+      }
     </Container>
   );
 }
 
-const Field = ({ label, icon, input }: {
-  label: React.ReactNode;
+const Field = ({
+  label,
+  icon,
+  input,
+  footer,
+}: {
+  label?: React.ReactNode;
   icon: React.ReactNode;
   input: React.ReactNode;
+  footer?: React.ReactNode;
 }) => {
   return (
     <InputGroup>
-      {typeof label === "string" ? <Label>{label}</Label> : label}
-      <InputWrapper>
-        <InputIcon>{icon}</InputIcon>
-        {input}
-      </InputWrapper>
+      {label && (typeof label === "string" ? <Label>{label}</Label> : label)}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+        <InputWrapper>
+          <InputIcon>{icon}</InputIcon>
+          {input}
+        </InputWrapper>
+        {footer && <div>{footer}</div>}
+      </div>
+
     </InputGroup>
   );
-}
+};

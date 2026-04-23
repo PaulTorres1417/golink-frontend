@@ -16,6 +16,9 @@ const CommentThread = lazy(() => import('./pages/post/CommentThread').then(m => 
 const Profile = lazy(() => import('./pages/profile/Profile').then(m => ({ default: m.Profile })))
 const ProfileGlobal = lazy(() => import('./pages/profile/ProfileGlobal').then(m => ({ default: m.ProfileGlobal })))
 const AuthCallback = lazy(() => import('./pages/auth/AuthCallback'));
+const VerifyEmail = lazy(() => import('./pages/auth/VerifyEmail'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +28,18 @@ export const router = createBrowserRouter([
   {
     path: "/auth/callback", 
     element: <AuthCallback />,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmail />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
   },
   {
     path: "/",

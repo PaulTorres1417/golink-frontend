@@ -75,8 +75,8 @@ const Container = styled.div<{ $isRepost: boolean, $theme: string, $border?: boo
     $border 
       ? 'none' 
       : $theme === 'dark'
-        ? '1px solid rgba(132, 130, 130, 0.37)'
-        : '1px solid rgba(197, 197, 197, 0.41)'};
+        ? '1px solid #6f778b32'
+        : '1px solid #a8b3cf62'};
 `;
 const TextContainer = styled.div`
   width: 100%;
@@ -119,7 +119,7 @@ const CloseButton = styled.button`
     background: rgba(182, 197, 201, 0.8);
   }
 `;
-/* avatar */
+
 const AvatarContainer = styled.div`
   flex-shrink: 0;
   display: flex;

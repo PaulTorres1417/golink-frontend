@@ -22,7 +22,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
-      "@features/*": ["src/components/features/*"]
+      "@features/*": ["src/components/features/*"],
+      "@public/*": ["public/*"]
     },
     /* Linting */
     "strict": true,

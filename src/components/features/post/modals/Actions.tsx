@@ -86,7 +86,7 @@ const List = styled.div<{ $themeMode: string, $type?: string }>`
   border-radius: 50%;
   cursor: ${({ $type }) => $type === 'file' ? 'pointer' : 'not-allowed'};
   &:hover {
-    background: ${({ $themeMode }) => $themeMode === 'dark' ? '#1870f459' : '#83b0f558'};
+    background: ${({ $themeMode }) => $themeMode === 'dark' ? '#456daa55' : '#83b0f558'};
   }
 `;
 

@@ -65,8 +65,8 @@ const CenterColumn = styled.div<{ $theme: string }>`
   flex-direction: column;
   border-right: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? 'rgba(132, 130, 130, 0.37)' 
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32' 
+      : '#a8b3cf62'};
 `;
 
 const CenterContent = styled.main<{ $theme: string }>`
@@ -77,8 +77,8 @@ const CenterContent = styled.main<{ $theme: string }>`
   justify-content: center;
   border-left: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? 'rgba(132, 130, 130, 0.37)' 
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32' 
+      : '#a8b3cf62'};
 `;
 
 const RightColumn = styled.aside`

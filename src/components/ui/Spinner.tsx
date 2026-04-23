@@ -1,7 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 
-export const Spinner = () => {
-  return <SpinnerWrapper />;
+type SpinnerProps = {
+  color?: string;
+}
+export const Spinner = ({ color }: SpinnerProps) => {
+  return <SpinnerWrapper $color={color}/>;
 };
 
 const spin = keyframes`
@@ -9,11 +12,11 @@ const spin = keyframes`
   100% {  transform: rotate(360deg) }
 `;
 
-const SpinnerWrapper = styled.div`
+const SpinnerWrapper = styled.div<{ $color?: string}>`
   width: 30px;
   height: 30px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #1870f4;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top: 3px solid ${({ $color }) => $color || '#1870f4'};
   border-radius: 50%;
   animation: ${spin} 0.55s linear infinite;
 `;

@@ -45,8 +45,8 @@ export const SidebarLeft = () => {
                     <StyledItemWrapper $collapsed={isCollapsed}>
                       <Icon>
                         {theme === 'light'
-                          ? <FiMoon size={25} />
-                          : <FiSun size={25} />}
+                          ? <FiMoon size={20} />
+                          : <FiSun size={20} />}
                       </Icon>
                       <Label $collapsed={isCollapsed}>{label}</Label>
                     </StyledItemWrapper>
@@ -67,7 +67,7 @@ export const SidebarLeft = () => {
                             willChange: 'transform, opacity',
                           }}
                         >
-                          <IconComponent size={25} />
+                          <IconComponent size={20} />
                         </Icon>
                         <Label $collapsed={isCollapsed}>{label}</Label>
                       </>

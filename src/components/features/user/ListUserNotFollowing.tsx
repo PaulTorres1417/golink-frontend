@@ -154,15 +154,16 @@ const Information = styled.div<{ $themeMode: string }>`
   flex-direction: column;
   
   span {
-    font-size: 15px;
+    font-size: 14px;
     color: ${({ $themeMode }) =>
     $themeMode === 'dark'
-      ? 'rgba(113, 118, 123, 1)'
+      ? '#8698c4ff'
       : 'rgba(83, 100, 113, 1)'};
     
     &:first-child {
       color: ${({ $themeMode }) => ($themeMode === 'dark' ? '#fff' : '#000')};
       font-weight: bold;
+      font-size: 15px;
     }
   }
 `;

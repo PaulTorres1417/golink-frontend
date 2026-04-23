@@ -29,12 +29,12 @@ const NavBarContainer = styled.nav<{ $theme: string }>`
   backdrop-filter: blur(10px);
   border-bottom: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? 'rgba(132, 130, 130, 0.37)' 
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32' 
+      : '#a8b3cf62'};
   border-left: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? 'rgba(132, 130, 130, 0.37)' 
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32' 
+      : '#a8b3cf62'};
 `;
 
 const CenterSection = styled.div`

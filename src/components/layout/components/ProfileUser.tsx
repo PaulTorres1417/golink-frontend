@@ -29,7 +29,7 @@ export const ProfileUser = ({ isCollapsed }: { isCollapsed: boolean }) => {
           )
         }
       </Avatar>
-      <Information $isCollapsed={isCollapsed}>
+      <Information $isCollapsed={isCollapsed} $theme={theme}>
         <h2>
           {user?.name
             .split("@")[0]
@@ -69,8 +69,8 @@ const Container = styled.div<{ $isCollapsed: boolean, $theme: string }>`
   border-radius: 30px;
   border: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? 'rgba(132, 130, 130, 0.37)'
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32'
+      : '#a8b3cf62'};
   position: relative; 
 
   ${({ $isCollapsed }) => $isCollapsed && `
@@ -91,7 +91,7 @@ const Avatar = styled.div`
    }
 `;
 
-const Information = styled.div<{ $isCollapsed?: boolean }>`
+const Information = styled.div<{ $isCollapsed?: boolean, $theme: string }>`
   width: 200px;
 
   h2 {
@@ -100,7 +100,7 @@ const Information = styled.div<{ $isCollapsed?: boolean }>`
   }
   p {
    font-size: 14px;
-   color: #767575ff;
+   color: ${({ $theme }) => $theme === 'dark' ? '#8698c4ff' : '#5f6b89ff'};
   }
 
   ${({ $isCollapsed }) => $isCollapsed && `

@@ -16,12 +16,12 @@ body {
   overscroll-behavior: none;
 }
 :root {
-  --bg: rgb(231, 233, 234);
+  --bg: #fff;
   --text: #302f2f;
 }
 
 [data-theme="dark"] {
-  --bg: #0a0a0a;
-  --text: rgb(231, 233, 234);
+  --bg: #0e1217;
+  --text: #d8dce7;
 }
 

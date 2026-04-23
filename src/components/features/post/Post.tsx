@@ -170,8 +170,8 @@ const PostWrapper = styled.article<{ $theme: string }>`
   padding: 7px 12px 4px 12px;
   border-bottom: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? 'rgba(132, 130, 130, 0.37)'
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32'
+      : '#a8b3cf62'};
   cursor: pointer;
 `;
 const Loading = styled.div`

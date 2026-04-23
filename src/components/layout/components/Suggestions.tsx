@@ -62,8 +62,8 @@ const Container = styled.div<{ $theme: string }>`
   border-radius: 17px;
   border: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? 'rgba(132, 130, 130, 0.37)'
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32'
+      : '#a8b3cf62'};
 `;
 const Content = styled.ul`
   width: 100%;

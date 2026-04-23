@@ -34,7 +34,7 @@ export const TrendingPostCard = () => {
         }
       </ContentArea>
     </Container>
-    <Footer>
+    <Footer $theme={theme}>
         <span>© 2026 Paul Torres H. Designed & developed by me.</span>
     </Footer>
     </>
@@ -53,8 +53,8 @@ const ContainerUser = styled.div`
 const Container = styled.div<{ $theme: string }>`
   border: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? 'rgba(132, 130, 130, 0.37)' 
-      : 'rgba(197, 197, 197, 0.41)'};
+      ? '#6f778b32' 
+      : '#a8b3cf62'};
   border-radius: 20px;
 `;
 
@@ -80,15 +80,15 @@ const Empty = styled.p`
   font-size: 14px;
   color: rgba(113, 118, 123, 1);
 `;
-const Footer = styled.div`
+const Footer = styled.div<{ $theme: string }>`
   width: 100%;
   height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   span {
-    font-size: 14px;
+    font-size: 13px;
     margin-top: 5px;
-    color: rgba(128, 127, 127, 1);
+    color: ${({ $theme }) => $theme === 'dark' ? '#a8b3cfff' : '#5f6b89ff'};
   }
 `;

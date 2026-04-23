@@ -163,7 +163,7 @@ const Action = styled.div<{ $themeMode: string, $saved?: boolean, $isRepost?: bo
       : $saved
         ? '#1870f4'
         : $themeMode === 'dark'
-          ? 'rgba(113, 118, 123, 1)'
+          ? '#a8b3cfbe'
           : 'rgba(83, 100, 113, 1)'};
 
   &.comment:hover ${Inner} {

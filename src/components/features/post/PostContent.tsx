@@ -170,7 +170,7 @@ export const PostContent = ({ data, isLCP = false }: Props) => {
               <SlOptions size={17} style={{
                 color: !isOpenOption
                   ? theme === 'dark'
-                    ? 'rgba(113, 118, 123, 1)'
+                    ? '#a8b3cf'
                     : 'rgba(83, 100, 113, 1)'
                   : '#1870f4'
               }} />
@@ -269,6 +269,7 @@ const Content = styled.p`
   font-weight: 400;
   font-size: 15px;
   display: block;
+  letter-spacing: 0.2px;
   word-wrap: break-word;
   text-aling: inherit;
      
@@ -312,12 +313,12 @@ const SubTitle = styled.div<{ $theme: string }>`
   align-items: center;
   cursor: pointer;
   span {
-    font-size: 15px;
+    font-size: 14px;
     margin-left: 4px;
     color: ${({ $theme }) =>
     ($theme === 'dark'
-      ? 'rgba(113, 118, 123, 1)'
-      : 'rgba(83, 100, 113, 1)')};
+      ? '#8698c4ff'
+      : '#5f6b89ff')};
   }
 `;
 

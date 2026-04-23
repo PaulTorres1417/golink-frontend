@@ -10,7 +10,7 @@ export const Search = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const { theme } = useTheme();
   const imputRef = useRef<HTMLInputElement>(null);
-  const themeColor = theme === 'dark' ? '#fff' : '#707e87bd';
+  const themeColor = theme === 'dark' ? '#85949dcf' : '#5f6b89ff';
 
   return (
     <Container
@@ -59,7 +59,7 @@ const Container = styled.div<{ $themeMode: string; $focused: boolean }>`
       ? '#1870f4'
       : $themeMode === 'dark'
         ? 'transparent'
-        : 'rgba(119, 117, 117, 0.31)'
+        : '#848ea870'
   };
   border-radius: 20px;
   padding: 0 14px 0 10px;
@@ -96,7 +96,7 @@ const Input = styled.input<{ $themeMode: string }>`
 
   &::placeholder {
     color: ${({ $themeMode }) =>
-    $themeMode === 'dark' ? '#85949dcf' : '#707e87bd'};
+    $themeMode === 'dark' ? '#85949dcf' : '#5f6b89ff'};
     font-size: 15px;
   }
 `;

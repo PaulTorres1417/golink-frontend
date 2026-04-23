@@ -134,12 +134,13 @@ const UserInfo = styled.div<{ $theme: string }>`
   flex-direction: column;
   h2 {
     font-size: 14px;
+    color: ${({ $theme }) => $theme === 'dark' ? '#fff' : '#000'};
   }
   span {
     font-size: 14px;
     color: ${({ $theme }) =>
     ($theme === 'dark'
-      ? 'rgba(113, 118, 123, 1)'
+      ? '#8698c4ff'
       : 'rgba(83, 100, 113, 1)')};
   }
 `;

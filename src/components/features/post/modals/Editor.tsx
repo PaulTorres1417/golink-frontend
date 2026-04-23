@@ -46,8 +46,8 @@ const FakeInput = styled.textarea<{$size: string, $themeMode: string}>`
   &::placeholder {
     color: ${({ $themeMode}) => 
       $themeMode === 'dark' 
-        ? 'rgba(113, 118, 123, 1)' 
-        : 'rgba(83, 100, 113, 1)'};
+        ? '#d8dce7' 
+        : '#5f6b89ff'};
     font-size: 20px;
   }
 `;

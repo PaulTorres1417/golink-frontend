@@ -5,7 +5,6 @@ import { Toaster } from "react-hot-toast";
 import { silentRefresh } from './lib/auth';
 
 async function bootstrap() {
-  // Intenta recuperar la sesión antes de renderizar
   await silentRefresh();
 
   createRoot(document.getElementById('root')!).render(
