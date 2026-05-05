@@ -4,7 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { useTheme } from '@/store/theme';
 import { useParams, useLocation } from "react-router-dom";
 
-export const ProfileGlobal = () => {
+export default function ProfileGlobal() {
   const { theme } = useTheme();
   const location = useLocation();
   const { id } = useParams();

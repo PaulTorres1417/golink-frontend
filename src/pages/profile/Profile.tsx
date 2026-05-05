@@ -16,7 +16,7 @@ const SAVE_IMAGE_PERFIL = gql`
   }
 `;
 
-export const Profile = () => {
+export default function Profile() {
   const [modalType, setModalType] = useState<"portada" | "avatar" | null>(null);
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);

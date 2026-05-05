@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from '@/store/theme/ThemeContext';
-import { ProfileGlobal } from './ProfileGlobal';
+import ProfileGlobal  from './ProfileGlobal';
 
 vi.mock('./UserInformation', () => ({
   UserInformation: ({ id }: { id?: string }) => <div>UserInformation {id}</div>,

@@ -16,7 +16,7 @@ import { dayjs } from '@/utils';
 import { FaUserCircle } from "react-icons/fa";
 import { FiArrowLeft } from "react-icons/fi";
 
-export const CommentThread = () => {
+export default function CommentThread() {
   const { id, commentId } = useParams();
   const currentUserId = useAuthStore(state => state.user?.id);
   const navigate = useNavigate();

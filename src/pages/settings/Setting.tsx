@@ -1,6 +1,6 @@
-import { Notifications } from "../notifications/Notifications";
+import Notifications from "../notifications/Notifications";
 
-export const Setting = () => {
+export default function Setting() {
   return (
     <Notifications />
   );

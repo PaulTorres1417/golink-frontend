@@ -13,7 +13,7 @@ import { COMMENT_ADDED_SUBSCRIPTION, REACTION_COMMENT_SUBSCRIPTION, COMMENTS_COU
   import type * as types from "./types";
 import { FiArrowLeft } from "react-icons/fi";
 
-export const PostThread = () => {
+export default function PostThread() {
   const [loadingMore, setLoadingMore] = useState(false);
   const currentUserId = useAuthStore(state => state.user?.id);
   const updatePostFields = usePostStore((state) => state.updatePostFields);

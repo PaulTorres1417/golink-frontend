@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Post } from "@/components/features/post/Post";
 import { PostForm } from '@/components/features/post/PostForm';
 
-export const Home = () => {
+export default function Home() {
 
   return (
     <Container>

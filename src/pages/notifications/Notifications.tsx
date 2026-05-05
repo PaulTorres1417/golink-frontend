@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { MdOutlineConstruction } from 'react-icons/md';
 import { useTheme } from '@store/theme';
 
-export const Notifications = () => {
+export default function Notifications() {
   const { theme } = useTheme();
   return (
     <Container $theme={theme}>

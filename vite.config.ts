@@ -16,6 +16,23 @@ export default defineConfig({
       '@store': fileURLToPath(new URL('./src/store', import.meta.url))
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React y librerías principales
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          
+          // Apollo Client (GraphQL)
+          'apollo-vendor': ['@apollo/client', 'graphql'],
+          
+          // UI y otras librerías comunes
+          'ui-vendor': ['lucide-react'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 500 // Opcional: para que no moleste el warning
+  },
   test: {
     environment: 'jsdom',
     globals: true,

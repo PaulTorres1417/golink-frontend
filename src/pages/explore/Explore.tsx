@@ -1,6 +1,6 @@
-import { Notifications } from "../notifications/Notifications";
+import Notifications from "../notifications/Notifications";
 
-export const Explore = () => {
+export default function Explore() {
   return (
     <Notifications />
   );

@@ -14,7 +14,7 @@ type GetFollowingprops = {
     bio?: string | null;
   }[];
 }
-export const Following = () => {
+export default function Following() {
   const { theme } = useTheme();
   const { data, loading, error } = useQuery<GetFollowingprops>(GET_FOLLOWING);
 
