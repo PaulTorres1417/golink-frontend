@@ -8,7 +8,29 @@ export const ProfileGlobal = () => {
   const { theme } = useTheme();
   const location = useLocation();
   const { id } = useParams();
-  const { data } = location.state;
+  const data = (location.state as { data?: {
+    id: string,
+    name: string,
+    email: string,
+    avatar?: string | null,
+    bio?: string | null,
+    coverphoto?: string | null,
+  } } | null)?.data;
+
+  if (!data) {
+    return (
+      <Container>
+        <ContainerI>
+          <TopRow>
+            <NameGroup>
+              <Name>Profile</Name>
+              <Email>No profile data</Email>
+            </NameGroup>
+          </TopRow>
+        </ContainerI>
+      </Container>
+    );
+  }
 
   return (
     <Container>
@@ -34,7 +56,7 @@ export const ProfileGlobal = () => {
           </NameGroup>
         </TopRow>
         {/* Information User */}
-        <UserInformation id={id}/>
+        <UserInformation id={id} info={data.bio ?? null}/>
 
         {data.bio && <Bio $useTheme={theme}>{data.bio}</Bio>}
       </ContainerI>

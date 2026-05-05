@@ -56,7 +56,7 @@ export const ModalSearch = ({
     if (debouncedValue.trim().length > 1) {
       searchUsers({ variables: { query: debouncedValue } });
     }
-  }, [debouncedValue]);
+  }, [debouncedValue, searchUsers]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -71,7 +71,7 @@ export const ModalSearch = ({
   const handleClick = (user: User ) => {
     setIsOpenModalSearch(false);
     setSearchValue('');
-    navigate(`/profile/${user.id}`, { state: { data: user }});
+    navigate(`/home/profile/${user.id}`, { state: { data: user }});
   }
 
   const renderContent = () => {

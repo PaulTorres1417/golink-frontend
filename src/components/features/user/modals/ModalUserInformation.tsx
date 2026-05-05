@@ -39,9 +39,6 @@ export const ModalUserInformation = ({ isOpen, setOpenModel }: ModalUserInformat
   const [bio, setBio] = useState("");
   const [UpdateProfile] = useMutation<UpdateProfileResponse, UpdatePropsVars>(UPDATE_PROFILE);
 
-  if (!isOpen) return null;
-  const hasChanges = name !== (user?.name ?? "") || bio !== (user?.bio ?? "");
-
   useEffect(() => {
     if (user) {
       setName(user.name ?? "");
@@ -49,19 +46,22 @@ export const ModalUserInformation = ({ isOpen, setOpenModel }: ModalUserInformat
     }
   }, [user])
 
+  if (!isOpen) return null;
+  const hasChanges = name !== (user?.name ?? "") || bio !== (user?.bio ?? "");
+
   const handleSubmit = async () => {
     try {
       const { data } = await UpdateProfile({ variables: { name, bio } });
-      if (data?.updateProfile) {
+      if (data?.updateProfile && user) {
         setUser({
           ...user,
-          name: data.updateProfile.name ?? user?.name ?? "",
-          bio: data.updateProfile.bio ?? user?.bio ?? "",
+          ...data.updateProfile
         });
         setOpenModel(!isOpen);
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+      throw error;
     }
   }
 
@@ -119,6 +119,7 @@ const Overlay = styled.div`
 
 const Modal = styled.div`
   background: #000;
+  padding: 15px;
   border-radius: 16px;
   width: 560px;
   max-width: 95vw;
@@ -132,7 +133,6 @@ const Title = styled.h2`
   font-weight: 700;
   color: #fff;
   padding: 16px 16px 12px;
-  border-bottom: 1px solid rgba(125, 123, 123, 0.6);
   position: sticky;
   top: 0;
   background: #000;
@@ -159,7 +159,7 @@ const Input = styled.input`
   padding: 12px;
   background: transparent;
   border: 1px solid rgba(125, 123, 123, 0.6);
-  border-radius: 4px;
+  border-radius: 5px;
   color: #fff;
   font-size: 15px;
   outline: none;
@@ -178,11 +178,19 @@ const Textarea = styled.textarea`
   width: 100%;
   padding: 12px;
   background: transparent;
+  font-family: Google Sans Text, Roboto, Arial, sans-serif;
   border: 1px solid rgba(125, 123, 123, 0.6);
   border-radius: 4px;
   color: #fff;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  word-wrap: break-word;
+  text-aling: inherit;
   font-size: 15px;
   outline: none;
+  line-height: 20px;
+  text-rendering: optimizeLegibility;
+  box-sizing: border-box;
   resize: none;
   transition: border-color 0.2s;
 

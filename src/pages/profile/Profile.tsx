@@ -7,8 +7,8 @@ import type { GenerateUploadSignatureResponse } from "@features/post/types";
 import { useAuthStore, useTheme } from "@/store";
 import { UserInformation } from "./UserInformation";
 import { ModalUserInformation } from "@features/user/modals";
-import { FaUserCircle } from "react-icons/fa";
 import { FiCamera } from "react-icons/fi";
+import { Avatar } from "@/components/ui";
 
 const SAVE_IMAGE_PERFIL = gql`
   mutation Save_image_pefil($type: String!, $image: String!) {
@@ -36,7 +36,6 @@ export const Profile = () => {
     }
   }
 
-  console.log(user?.avatar)
   return (
     <Container>
       {/* Portada */}
@@ -48,13 +47,7 @@ export const Profile = () => {
 
       {/* Avatar */}
       <AvatarWrapper>
-        {user?.avatar ? (
-          <AvatarImg src={user.avatar} alt="" />
-        ) : (
-          <AvatarFallback $theme={theme}>
-            <FaUserCircle size={18} />
-          </AvatarFallback>
-        )}
+        <Avatar avatarUrl={user?.avatar} size={150}/>
         <EditAvatarButton onClick={() => setModalType("avatar")}>
           <FiCamera size={18} />
         </EditAvatarButton>
@@ -66,13 +59,11 @@ export const Profile = () => {
             <Username>{user?.email ?? "anonimus"}</Username>
           </NameGroup>
 
-          <EditButton $useTheme={theme} onClick={() => setOpenModel(!openModel)}>Editar perfil</EditButton>
+          <EditButton $useTheme={theme} onClick={() => setOpenModel(!openModel)}>Edit profile</EditButton>
         </TopRow>
 
         {/* Information User */}
-        <UserInformation id={id} />
-
-        {user?.bio && <Bio $useTheme={theme}>{user.bio}</Bio>}
+        <UserInformation id={id} info={user?.bio ?? null}/>
         {
           openModel &&
           <ModalUserInformation isOpen={openModel} setOpenModel={setOpenModel} />
@@ -159,13 +150,14 @@ const UploadModal = ({
 
     } catch (error) {
       console.error("Error saving image:", error);
+      throw error;
     }
   }
 
   return (
     <ModalOverlay onClick={close}>
       <Modal onClick={(e) => e.stopPropagation()}>
-        <ModalTitle>{type === "portada" ? "Cambiar portada" : "Cambiar foto de perfil"}</ModalTitle>
+        <ModalTitle>{type === "portada" ? "change cover" : "change profile photo"}</ModalTitle>
 
         {preview ? (
           <PreviewImage src={preview} />
@@ -173,7 +165,7 @@ const UploadModal = ({
           <EmptyPreview>
             <UploadLabel htmlFor="uploadInput">
               <FiCamera size={40} style={{ opacity: 0.85 }} />
-              <span>Subir imagen</span>
+              <span>upload image</span>
             </UploadLabel>
           </EmptyPreview>
         )}
@@ -181,9 +173,9 @@ const UploadModal = ({
         <HiddenInput id="uploadInput" type="file" accept="image/*" onChange={handleUpload} />
 
         <ButtonsRow>
-          <CancelButton onClick={close}>Cancelar</CancelButton>
+          <CancelButton onClick={close}>Cancel</CancelButton>
           <SaveButton disabled={!preview || uploading} onClick={saveImagePerfil}>
-            {uploading ? "Guardando..." : "Guardar"}
+            {uploading ? "saving..." : "keep"}
           </SaveButton>
         </ButtonsRow>
       </Modal>
@@ -204,7 +196,6 @@ const Portada = styled.div`
   background-size: cover;
   background-position: center;
   position: relative;
-  border-radius: 0 0 10px 10px;
 `;
 
 const EditCoverButton = styled.button`
@@ -229,31 +220,6 @@ const AvatarWrapper = styled.div`
   width: 150px;
   margin-left: 20px;
   margin-top: -75px;
-`;
-
-const AvatarImg = styled.img`
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid white;
-`;
-
-const AvatarFallback = styled.div<{ $theme: string }>`
-  width: 150px;
-  height: 150px;
-  background: #94a3b8;
-  border-radius: 50%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  svg {
-    width: 100%;
-    height: 100%;
-    color: ${({ $theme }) => $theme === 'dark' ? '#474d56ff' : '#1e293b;'};
-  }
 `;
 
 const EditAvatarButton = styled.button`
@@ -414,13 +380,6 @@ const Name = styled.h2`
 
 const Username = styled.span`
   font-size: 14px;
-`;
-
-const Bio = styled.p<{ $useTheme: string }>`
-  margin-top: 20px;
-  font-size: 15px;
-  line-height: 1.4;
-  color: ${({ $useTheme }) => $useTheme === 'dark' ? '#9ba6b5b0' : '#444e5ce4'}
 `;
 
 const EditButton = styled.button<{ $useTheme: string }>`

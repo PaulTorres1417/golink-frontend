@@ -1,10 +1,16 @@
 import { useState } from "react";
 import { useMutation } from "@apollo/client/react";
-import { useTheme, usePostStore, useAuthStore } from '@/store';
+import { useTheme, useAuthStore } from '@/store';
 import { REPLIES_BY_COMMENT, COMMENTS_BY_POST } from '@/graphql/query';
 import type { Comment, CreateCommentResponse, CreateCommentVar } from '@features/comment/types';
 import { CREATE_COMMENT_INPUT } from "@/graphql/mutation";
 import type { CommentType, PostQueryProps } from "@/components/features/post/types";
+
+type OptimisticResponse = {
+  optimisticResponse?: {
+    createComment: CreateCommentResponse['createComment'];
+  };
+};
 
 type CommentsByPostData = {
   commentsByPost: Comment;
@@ -17,21 +23,28 @@ type Props = {
   postId: string;
   parentCommentId?: string | null;
 }
+
 export const useCommentInput = ({ post, postId, parentCommentId }: Props) => {
   const [comment, setComment] = useState<string>('');
   const user = useAuthStore((state) => state.user);
   const { theme } = useTheme();
-  const updatePostCommentCount = usePostStore((state) => state.updatePostCommentCount);
 
   const [Create_Comment] = useMutation<CreateCommentResponse, CreateCommentVar>(CREATE_COMMENT_INPUT, {
     update: (cache, result) => {
       const newComment =
         (result.data as CreateCommentResponse | undefined)?.createComment ||
-        (result as any)?.optimisticResponse?.createComment;
+        (result as unknown as OptimisticResponse)?.optimisticResponse?.createComment;
       if (!newComment) return;
-      const isOptimistic = newComment.id.startsWith('temp-');
-      if (isOptimistic) {
-        updatePostCommentCount(postId, 1);
+
+      if (!parentCommentId) {
+        cache.modify({
+          id: cache.identify({ __typename: 'Post', id: postId }),
+          fields: {
+            comments(existing = 0) {
+              return existing + 1;
+            }
+          }
+        });
       }
 
       if (parentCommentId) {
@@ -67,7 +80,6 @@ export const useCommentInput = ({ post, postId, parentCommentId }: Props) => {
       };
 
       if (parentCommentId) {
-
         const existingData = cache.readQuery<CommentsByReplyData>({
           query: REPLIES_BY_COMMENT,
           variables: { commentId: parentCommentId, first: 4 },
@@ -108,9 +120,7 @@ export const useCommentInput = ({ post, postId, parentCommentId }: Props) => {
             },
           });
         }
-
       } else {
-
         const existingData = cache.readQuery<CommentsByPostData>({
           query: COMMENTS_BY_POST,
           variables: { postId, first: 4 },
@@ -137,8 +147,7 @@ export const useCommentInput = ({ post, postId, parentCommentId }: Props) => {
         }
       }
     },
-
-  })
+  });
 
   const handleSend = async () => {
     if (!comment.trim()) return;
@@ -165,6 +174,7 @@ export const useCommentInput = ({ post, postId, parentCommentId }: Props) => {
               avatar: user?.avatar || null,
             },
             post_id: {
+              __typename: 'Post',
               id: post?.id ?? postId,
               content: '',
             },
@@ -178,17 +188,13 @@ export const useCommentInput = ({ post, postId, parentCommentId }: Props) => {
             isRepost: false,
             created_at: new Date().toISOString(),
           }
-        }
+        },
       });
-    } catch (error) {
-      const err = error as any;
-      console.error("Error creating comment:", error);
-      console.error('GraphQL errors:', err.graphQLErrors);
-      console.error('Network error:', err.networkError);
-      console.error('Message:', err.message);
+    } catch (error: unknown) {
       setComment(currentComment);
+      throw error;
     }
   };
 
   return { comment, setComment, theme, user, handleSend };
-}
+};

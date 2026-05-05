@@ -1,8 +1,7 @@
 import { useMutation, useSubscription } from '@apollo/client/react';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CreateViewProps, CreateViewVars, PostRepostCount } from './types';
-import { useTheme, usePostStore } from '@/store';
+import { usePostStore } from '@/store';
 import type {
   CommentAddedSubscription, CommentTypeProps,
   PostCommentCountSubscription
@@ -20,8 +19,6 @@ type PostContentProps = {
 }
 
 export const usePostContent = ({ data }: PostContentProps) => {
-  const [isOpenOption, setIsOpenOption] = useState<boolean>(false);
-  const { theme } = useTheme();
   const navigate = useNavigate();
   const postId = data.clientId ?? data.id;
   const updatePostFields = usePostStore((state) => state.updatePostFields);
@@ -43,6 +40,7 @@ export const usePostContent = ({ data }: PostContentProps) => {
 
   useSubscription<CommentAddedSubscription>(COMMENT_ADDED_SUBSCRIPTION, {
     onData: ({ client, data: subscriptionData }) => {
+      console.log('subscription commentAdd');
       const newComment = subscriptionData.data?.commentAdded;
       if (!newComment) return;
 
@@ -107,6 +105,7 @@ export const usePostContent = ({ data }: PostContentProps) => {
 
   useSubscription<PostCommentCountSubscription>(POST_COMMENT_COUNT_SUBSCRIPTION, {
     onData: ({ data }) => {
+      console.log('subscription commentCount')
       const postCountData = data.data?.postCommentsCount;
       if (!postCountData) return;
       if (postCountData.id === postId) {
@@ -138,10 +137,10 @@ export const usePostContent = ({ data }: PostContentProps) => {
       const realPostId = postData.clientId ?? postData.id;
       create_view_post({ variables: { postId: realPostId } });
     }
-    navigate(`/post/${postData.clientId ? postData.clientId : postData.id}`,
+    navigate(`/home/post/${postData.clientId ? postData.clientId : postData.id}`,
       { state: { postData: { kind: 'Post' as const, ...postData } } });
     window.scrollTo({ top: 0 });
   }
 
-  return { isOpenOption, setIsOpenOption, theme, handlePostDetails };
+  return { handlePostDetails };
 }

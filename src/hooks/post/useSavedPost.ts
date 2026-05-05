@@ -1,9 +1,9 @@
 import { useFragment, useMutation } from "@apollo/client/react";
 import { SAVED_POST_QUERY } from "@/graphql/query";
 import { SAVED_POST, REMOVE_SAVED_POST } from "@/graphql/mutation";
-import type { SavedPostProps } from "@/pages/savedItems/SavedItems";
+import type { SavedPostProps } from "@/pages/bookmarks/BookMarks";
 import { gql } from "@apollo/client";
-import type { PostType } from "@/components/features/post/types";
+import type { PostQueryProps, PostType } from "@/components/features/post/types";
 
 const POST_SAVED_FRAGMENT = gql`
   fragment PostSaved on Post {
@@ -25,7 +25,7 @@ export const useSavedPost = (data: PostType) => {
     update: (cache) => {
       cache.updateQuery({ query: SAVED_POST_QUERY }, (existing: SavedPostProps | null) => {
         const current = existing?.getSavedPosts ?? [];
-        const alreadyExists = current.some((p: any) => p.id === data.id);
+        const alreadyExists = current.some((p: PostQueryProps) => p.id === data.id);
         if (alreadyExists) return existing;
         return { getSavedPosts: [data, ...current] };
       });
@@ -45,7 +45,7 @@ export const useSavedPost = (data: PostType) => {
         }
       });
       cache.updateQuery({ query: SAVED_POST_QUERY }, (existing: SavedPostProps | null) => ({
-        getSavedPosts: (existing?.getSavedPosts ?? []).filter((p: any) => p.id !== data.id)
+        getSavedPosts: (existing?.getSavedPosts ?? []).filter((p: PostQueryProps) => p.id !== data.id)
       }));
     }
   });

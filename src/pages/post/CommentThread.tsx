@@ -60,6 +60,7 @@ export const CommentThread = () => {
     },
     onError: (error) => {
       console.error('Reaction subscription error:', error);
+      throw error;
     }
   });
 
@@ -195,14 +196,13 @@ export const CommentThread = () => {
   const comment = state?.commentData;
   const ancestorComments = state?.ancestorComments || [];
 
-  // Componente para mostrar comentarios ancestros con diseño horizontal
-  const AncestorComment = ({ comment }: any) => {
+  const AncestorComment = ({ comment }: { comment: CommentType }) => {
     return (
       <>
         <AncestorCommentContent>
           <AvatarContainer>
             {comment.user_id.avatar ? (
-              <img src={comment.user_id.avatar} alt={`${comment.user_id.name}'s avatar`} />
+              <img src={comment.user_id.avatar} alt={`${comment.user_id.name}`} />
             ) : (
               <FaUserCircle size={40} />
             )}
@@ -226,12 +226,12 @@ export const CommentThread = () => {
   };
 
   return (
-    <Container onClick={() => console.log("container click")}>
+    <Container>
       <HeaderTop>
         <BackButton onClick={() => navigate(-1)} $themeMode={theme}>
           <FiArrowLeft size={22} style={{ cursor: 'pointer' }} />
         </BackButton>
-        <Title>Reply</Title>
+        <Title>Post</Title>
       </HeaderTop>
 
       <ThreadConnectorWrapper>
@@ -242,11 +242,12 @@ export const CommentThread = () => {
             <PostContent data={state.postData} />
           </PostWrapper>
           {/* Línea vertical que conecta el post con el primer comentario */}
-          {ancestorComments.length > 0 && <ThreadLine $isFromPost={true} $themeMode={theme} />}
+          {ancestorComments.length > 0 && 
+          <ThreadLine $isFromPost={true} $themeMode={theme} />}
         </PostWrapperWithLine>
 
         {/* Renderizar TODOS los comentarios ancestros EXCEPTO el último */}
-        {ancestorComments.slice(0, -1).map((ancestorComment: any) => (
+        {ancestorComments.slice(0, -1).map((ancestorComment: CommentType) => (
           <AncestorCommentWrapperWithLine key={ancestorComment.id}>
             <AncestorComment comment={ancestorComment} />
             {/* Línea vertical que conecta este comentario con el siguiente */}
@@ -329,10 +330,10 @@ const ThreadLine = styled.div<{ $isFromPost: boolean, $themeMode: string }>`
   left: 31px;
   top: ${({ $isFromPost }) => $isFromPost ? '58px' : '46px'};
   bottom: 6px;
-  width: 2px;
+  width: 1.5px;
   background-color: ${({ $themeMode }) =>
     $themeMode === 'dark'
-      ? 'rgba(132, 130, 130, 0.49)'
+      ? '#6f778b81'
       : 'rgba(134, 143, 148, 0.49)'};
   z-index: 0;
 `;

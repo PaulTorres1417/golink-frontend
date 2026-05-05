@@ -1,15 +1,13 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client/react';
-import { useTheme } from '@/store/theme';
 import type { UserFollowResponse, UserUnFollowResponse } from '@features/user/types';
 import { FOLLOW_USER } from '@/graphql/mutation/user/followUser';
 import { UNFOLLOW_USER } from '@/graphql/mutation/user/unFollowUser';
 
-export const useListUserNotFollowing = () => {
+export const useListUserNotFollowing = (state = false) => {
   const [isHovering, setIsHovering] = useState<boolean>(false);
-  const [isFollow, setIsFollow] = useState<boolean>(false);
+  const [isFollow, setIsFollow] = useState<boolean>(state);
   const [ignoreHover, setIgnoreHover] = useState<boolean>(false);
-  const { theme } = useTheme();
   const [Follow_User] = useMutation<UserFollowResponse>(FOLLOW_USER);
   const [UnFollow_User] = useMutation<UserUnFollowResponse>(UNFOLLOW_USER);
 
@@ -51,6 +49,6 @@ export const useListUserNotFollowing = () => {
     return (isHovering && !ignoreHover) ? 'Unfollow' : 'Following';
   };
 
-  return { theme, isHovering, isFollow, handleClickFollow, 
+  return { isHovering, isFollow, handleClickFollow, 
     handleMouseEnter, handleMouseLeave, getButtonText };
 }

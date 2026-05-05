@@ -29,12 +29,12 @@ export const yearOptions = Array.from({ length: 100 }, (_, i) => ({
   value: String(currentYear - i), label: String(currentYear - i),
 }));
 
-export const useRegisterForm = (isOpen: boolean, onClose: () => void) => {
+export const useRegisterForm = (isOpen: boolean) => {
   const [Create_Register, { loading }] = useMutation<RegisterType>(CREATE_REGISTER);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [birth, setBirth] = useState({ day: "", month: "", year: "" });
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -66,18 +66,21 @@ export const useRegisterForm = (isOpen: boolean, onClose: () => void) => {
 
     try {
       const birthday = `${birth.year}-${birth.month.padStart(2, "0")}-${birth.day.padStart(2, "0")}`;
+
       const { data } = await Create_Register({ variables: { ...form, birthday } });
       if (data?.register) {
         setSuccess(true);
       };
+    } catch (err: unknown) {
+      const gqlError = (err as { graphQLErrors?: { message: string; extensions?: { field: string } }[] })
+        ?.graphQLErrors?.[0];
 
-    } catch (err: any) {
-      console.error('Register error:', err.message);
-      const gqlError = err?.graphQLErrors?.[0];
+      console.error('Register error:', (err as { message?: string })?.message);
+
       if (gqlError?.extensions?.field) {
         setErrors(prev => ({
           ...prev,
-          [gqlError.extensions.field]: gqlError.message
+          [gqlError.extensions!.field]: gqlError.message
         }));
       }
     }
@@ -88,11 +91,12 @@ export const useRegisterForm = (isOpen: boolean, onClose: () => void) => {
       setForm({ name: "", email: "", password: "" });
       setErrors({});
       setBirth({ day: "", month: "", year: "" });
+      setSuccess(false);
     }
   }, [isOpen]);
 
   return {
     form, errors, birth, loading, success,
-    handleChange, handleBirthChange, handleSubmit, 
+    handleChange, handleBirthChange, handleSubmit,
   };
 };

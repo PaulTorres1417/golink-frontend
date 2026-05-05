@@ -9,18 +9,24 @@ import {
   Button, BirthLabel, SelectRow, ErrorMsg,
   SuccessContainer,
   SuccessText,
-  CloseBtn
 } from "./styles";
+import { useNavigate } from "react-router-dom";
 
-type Props = {
+type RegisterProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSwitchToLogin?: () => void;
 }
 
-export const ModalRegister = ({ isOpen, onClose }: Props) => {
+export const ModalRegister = ({ isOpen, onClose }: RegisterProps) => {
+  const navigate = useNavigate();
   const { form, errors, birth, loading, success,
-    handleChange, handleBirthChange, handleSubmit } = useRegisterForm(isOpen, onClose);
+    handleChange, handleBirthChange, handleSubmit } = useRegisterForm(isOpen);
+
+  useEffect(() => {
+    if(!success) return;
+    const timer = setTimeout(() => navigate('/'), 5000);
+    return () => clearTimeout(timer);
+  }, [success, navigate])
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -32,7 +38,7 @@ export const ModalRegister = ({ isOpen, onClose }: Props) => {
 
   return (
     <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <ModalCard>
+      <ModalCard $success={success}>
         <CloseButton onClick={onClose}><X size={16} /></CloseButton>
         {
           success ? (
@@ -42,7 +48,6 @@ export const ModalRegister = ({ isOpen, onClose }: Props) => {
               <SuccessText>
                 We sent you a confirmation link. Please verify your email to continue.
               </SuccessText>
-              <CloseBtn onClick={onClose}>Got it</CloseBtn>
             </SuccessContainer>
           ) : (
             <>

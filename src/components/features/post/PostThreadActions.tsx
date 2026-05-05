@@ -118,7 +118,7 @@ const ActionsContainer = styled.div<{ $theme: string }>`
   justify-content: space-between;
   border-bottom: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? 'rgba(132, 130, 130, 0.37)'
+      ? '#6f778b52'
       : 'rgba(197, 197, 197, 0.41)'};
 `;
 
@@ -147,7 +147,7 @@ const Action = styled.div<{ $themeMode: string, $isRepost?: boolean }>`
     $isRepost
       ? '#00ba7c'
       : ($themeMode === 'dark'
-        ? 'rgba(113, 118, 123, 1)'
+        ? '#a8b3cfbe'
         : 'rgba(83, 100, 113, 1)')};
 
   &.comment:hover ${Inner} {

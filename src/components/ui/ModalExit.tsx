@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaPowerOff } from "react-icons/fa6";
 import { useAuthStore, usePostStore, useTheme, useSavedPostStore } from '@/store';
 import { useNavigate } from 'react-router-dom';
 import { useApolloClient } from '@apollo/client/react';
 import { TokenStore } from '@/store/auth/tokenStore';
+import { LuLogOut } from "react-icons/lu";
 
 interface ModalProps {
   setIsModalOpen: (value: boolean) => void;
@@ -52,7 +52,7 @@ export const ModalExit = ({ setIsModalOpen, isCollapsed }: ModalProps) => {
          onClick={handleClickExit} 
          $theme={theme}
          $isCollapsed={isCollapsed}>
-          <FaPowerOff />
+          <LuLogOut size={20}/>
           {
             isCollapsed === false &&
             <H2>Log out {user ? user.name.split(' ')[0]: ''}</H2>

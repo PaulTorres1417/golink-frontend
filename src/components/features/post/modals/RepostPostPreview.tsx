@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { FaUserCircle } from "react-icons/fa";
 import type { RepostSource } from "./types";
+import { Avatar } from "@/components/ui";
 
 type repostPreviewProps = {
   data: RepostSource;
@@ -11,11 +11,7 @@ export const RepostPostPreview = ({ data, theme }: repostPreviewProps) => {
     <QuotedPost $isDark={theme}>
       <QuotedHeader>
         <QuotedAvatarWrapper>
-          {data.payload.user_id.avatar ? (
-            <QuotedAvatar src={data.payload.user_id.avatar} alt="avatar" />
-          ) : (
-            <FaUserCircle size={18} color={theme ? '#fff' : '#666'} />
-          )}
+          <Avatar avatarUrl={data.payload.user_id.avatar} size={25}/>
         </QuotedAvatarWrapper>
         <QuotedName $isDark={theme}>{data.payload.user_id.name}</QuotedName>
         <QuotedHandle $isDark={theme}>
@@ -63,15 +59,7 @@ const QuotedHeader = styled.div`
 `;
 
 const QuotedAvatarWrapper = styled.div`
-  flex-shrink: 0;
-  display: flex;
-`;
-
-const QuotedAvatar = styled.img`
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  object-fit: cover;
+  margin-bottom: 4px;
 `;
 
 const QuotedName = styled.span<{ $isDark: string }>`

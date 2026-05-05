@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
-import { Spinner } from '../../ui/Spinner';
-import { useTheme } from '../../../store/theme/ThemeContext';
-import { ListUserNotFollowing } from '../../features/user/ListUserNotFollowing';
+import { Spinner } from '@components/ui';
+import { useTheme } from '@store/theme';
+import { ListUserNotFollowing } from '@features/user/ListUserNotFollowing';
+import { useNavigate } from 'react-router-dom';
 
 const GET_ALL_USERS = gql`
   query GetUsersAll {
@@ -12,6 +13,7 @@ const GET_ALL_USERS = gql`
       name
       email
       avatar
+      bio
     }
   }
 `;
@@ -20,6 +22,7 @@ type User = {
   name: string;
   email: string;
   avatar?: string | null;
+  bio?: string | null;
 };
 type UserListProps = {
   getAllUsers: User[];
@@ -28,8 +31,14 @@ type UserListProps = {
 export const Suggestions = () => {
   const { data, error, loading } = useQuery<UserListProps>(GET_ALL_USERS);
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   if (error) throw new Error('Error fetching users');
+
+  const handleShowMore = () => {
+    const users = data?.getAllUsers;
+    navigate('/home/not-following', { state: { data: users } });
+  }
 
   return (
     <Container $theme={theme}>
@@ -43,11 +52,17 @@ export const Suggestions = () => {
           </ContainerLoading>
         ) : (
           data?.getAllUsers?.map((element: User) => (
-            <ListUserNotFollowing key={element.id} data={element} />
+            <ListUserNotFollowing
+              key={element.id}
+              data={element}
+              info={false}
+              state={false}
+            />
           )))
         }
       </Content>
       <ShowMoreButton
+        onClick={handleShowMore}
         $theme={theme}>
         Show more
       </ShowMoreButton>
@@ -58,19 +73,19 @@ export const Suggestions = () => {
 const Container = styled.div<{ $theme: string }>`
   width: 100%;
   height: 300px;
-  padding: 20px;
+  padding: 22px;
   border-radius: 17px;
   border: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? '#6f778b32'
+      ? '#6f778b52'
       : '#a8b3cf62'};
 `;
 const Content = styled.ul`
   width: 100%;
-  height: 200px;
+  height: 190px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 15px;
   flex-direction: column;
   list-style: none;
 `;
@@ -93,7 +108,7 @@ export const ContainerLoading = styled.div`
 const ShowMoreButton = styled.button<{ $theme: string }>`
   background: transparent;
   display: flex;
-  cursor: not-allowed;
+  cursor: pointer;
   justify-content: flex-start;
   border: none;
   color: ${({ $theme }) => $theme === 'dark' ? '#1877F2' : '#1877F2'};

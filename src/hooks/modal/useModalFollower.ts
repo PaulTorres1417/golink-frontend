@@ -22,7 +22,7 @@ export const useModalFollower = ({ setIsOpenFollower }: Props) => {
     if (followers.length > 0) {
       resetCount();
     }
-  }, [followers]);
+  }, [followers, resetCount]);
 
   useEffect(() => {
     const showAsRead = async () => {
@@ -32,13 +32,13 @@ export const useModalFollower = ({ setIsOpenFollower }: Props) => {
             await show_As_Read({ variables: { notificationId: element.id } });
           } catch (error) {
             console.error('Error al marcar como leidas', error);
-            throw new Error('Error al read notifications views');
+            throw error;
           }
         }
       }
     }
     if (followers.length > 0) showAsRead();
-  }, [followers])
+  }, [followers, resetCount, show_As_Read])
 
 
   useEffect(() => {

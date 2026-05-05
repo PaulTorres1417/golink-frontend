@@ -1,5 +1,4 @@
 import { styled } from "styled-components";
-import { FaUserCircle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client/react";
 import { useTheme } from '@/store/theme';
@@ -8,6 +7,7 @@ import { PostDetailAction } from "../post/detail/PostDetailAction";
 import type { CommentType } from "./types";
 import { CREATE_VIEW_COMMENT } from "@/graphql/mutation";
 import { getDisplayName } from "@/utils/user/user";
+import { Avatar } from "@/components/ui";
 
 export const Comment = ({ comment, post }: CommentType) => {
   const { user_id, content, created_at, has_viewed } = comment;
@@ -27,7 +27,7 @@ export const Comment = ({ comment, post }: CommentType) => {
     const existingAncestors = location.state?.ancestorComments || [];
     const newAncestors = [...existingAncestors, comment];
 
-    navigate(`/post/${post?.id}/comment/${commentId}`, {
+    navigate(`/home/post/${post?.id}/comment/${commentId}`, {
       state: {
         postData: originalPost,
         commentData: {
@@ -45,14 +45,7 @@ export const Comment = ({ comment, post }: CommentType) => {
   return (
     <Container $themeMode={theme} onClick={() => handleComment(comment.id)}>
       <Main>
-        <AvatarContainer>
-          {user_id.avatar ? (
-            <img src={user_id.avatar} alt={`${user_id.name}'s avatar`} />
-          ) : (
-            <FaUserCircle size={40} />
-          )}
-        </AvatarContainer>
-
+        <Avatar avatarUrl={user_id.avatar}/>
         <TextContent>
           <UserName>
             <div><p>{getDisplayName(user_id.name)}</p></div>
@@ -75,7 +68,7 @@ const Container = styled.div<{ $themeMode: string }>`
   flex-direction: column;
   cursor: pointer;
   border-bottom: ${({ $themeMode }) => $themeMode === 'dark'
-    ? '1px solid rgba(132, 130, 130, 0.37)'
+    ? '1px solid #6f778b52'
     : '1px solid rgba(197, 197, 197, 0.41)'}; 
   transition: background-color 0.2s ease;
 `;
@@ -87,21 +80,6 @@ const Main = styled.div`
   width: 100%;
 `;
 
-const AvatarContainer = styled.div`
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 40px;
-
-  img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-`;
-
 const TextContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -111,7 +89,7 @@ const TextContent = styled.div`
 const Email = styled.div<{ $themeMode: string }>`
   color: ${({ $themeMode }) =>
   ($themeMode === 'dark'
-    ? 'rgba(113, 118, 123, 1)'
+    ? '#8698c4ff'
     : 'rgba(83, 100, 113, 1)')};
 `;
 
@@ -132,7 +110,7 @@ const CommentText = styled.p<{ $themeMode: string }>`
 const Time = styled.div<{ $themeMode: string }>`
   color: ${({ $themeMode }) =>
   ($themeMode === 'dark'
-    ? 'rgba(113, 118, 123, 1)'
+    ? '#8698c4ff'
     : 'rgba(83, 100, 113, 1)')};
 
   span { margin-left: 3px }

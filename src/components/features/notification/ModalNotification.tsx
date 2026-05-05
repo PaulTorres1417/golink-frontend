@@ -44,13 +44,13 @@ export const ModalNotification = ({ setIsOpenNotification, handleFetchMore, isPe
                 </NotificationContent>
                 {
                   notification.type === 'LIKED_YOUR_POST' || notification.type === 'LIKED_YOUR_COMMENT'
-                    ? <HiMiniHeart size={25} style={{ color: '#c3686fff' }} />
+                    ? <HiMiniHeart size={25} style={{ color: '#bb2f44ff' }} />
                     : notification.type === 'COMMENTED_ON_YOUR_POST'
-                      ? <FaCommentDots size={25} style={{ color: '#7ca2c6ff' }} />
+                      ? <FaCommentDots size={25} style={{ color: '#3580c7ff' }} />
                       : notification.type === 'REPLIED_TO_YOUR_COMMENT'
-                        ? <FaComments size={25} style={{ color: '#79a5ceff' }} />
+                        ? <FaComments size={25} style={{ color: '#3479c3ff' }} />
                         : notification.type === 'REPOSTED_YOUR_POST' || notification.type === 'REPOSTED_YOUR_COMMENT'
-                          ? <BiRepost size={25} style={{ color: '#74b593ff' }} />
+                          ? <BiRepost size={25} style={{ color: '#25a050ff' }} />
                           : null
                 }
               </NotificationItem>

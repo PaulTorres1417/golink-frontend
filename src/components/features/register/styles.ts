@@ -22,15 +22,14 @@ export const Overlay = styled.div`
   animation: ${fadeIn} 0.2s ease;
 `;
 
-export const ModalCard = styled.div`
+export const ModalCard = styled.div<{ $success?: boolean }>`
   background: #0e1217;
   border-radius: 24px;
   padding: 50px;
   width: 100%;
   margin-top: 80px;
   max-width: 550px;
-  max-height: calc(100vh - 220px);
-  min-height: calc(100vh - 300px);
+  height: ${({ $success }) => $success ? "auto" : "fit-content"}
   overflow-y: auto;
   position: relative;
   animation: ${slideUp} 0.25s ease;
@@ -306,9 +305,10 @@ export const SuccessContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   padding: 20px 0;
-  color: #fff;
+  color: #10b981;
   text-align: center;
 `;
 
@@ -317,21 +317,4 @@ export const SuccessText = styled.p`
   color: #64748b;
   letter-spacing: 0.3px;
   line-height: 1.5;
-`;
-
-export const CloseBtn = styled.button`
-  margin-top: 8px;
-  padding: 13px 32px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(120deg, #407ddf 0%, #7453d6 100%);
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
 `;

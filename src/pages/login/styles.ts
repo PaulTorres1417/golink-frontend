@@ -19,8 +19,6 @@ export const BackgroundPattern = styled.div`
   z-index: -1;
 `;
 
-
-
 export const ContentWrapper = styled.div`
   position: relative;
   display: flex;
@@ -64,8 +62,8 @@ export const MessageGlobal = styled.div<{ $visible: boolean }>`
 `;
 
 export const Video = styled.div`
-  width: 650px;
-  height: 542px;
+  max-width: 650px;
+  max-height: 542px;
   overflow: visible;
   z-index: 1000;
   
@@ -95,12 +93,16 @@ export const BrandName = styled.h1`
   letter-spacing: 0.3px;
 
   span {
-  display: inline-block; 
-  background: linear-gradient(120deg, #407ddfff 0%, #7453d6ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
+    display: inline-block; 
+    background: linear-gradient(120deg, #407ddfff 0%, #7453d6ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @media (max-width: 950px){
+    margin-left: 0;
+  }
 `;
 
 export const BrandTagline = styled.p`
@@ -346,8 +348,8 @@ export const SocialButton = styled.button`
 
 export const FooterText = styled.div`
   text-align: center;
-  font-size: 13px;
-  color: #8696acff;
+  font-size: 12px;
+  color:rgba(134, 150, 172, 0.73);
   margin: 0;
 
   span {

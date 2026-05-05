@@ -1,24 +1,28 @@
 import styled from 'styled-components';
 import { PostContent } from './PostContent';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { EmptyPosts, Spinner, Avatar } from '@/components/ui';
 import { usePostFeed } from '@/hooks/post/usePostFeed';
+import { useTheme } from '@/store';
 
 export const Post = () => {
-const { posts, isInitialLoading, error, observerRef, 
-  theme, isFetchingMore, handleObserver } = usePostFeed();
+  const { posts, isInitialLoading, error, isFetchingMore, handleObserver } = usePostFeed();
+  const observerRef = useRef<HTMLDivElement | null>(null);
+  const { theme } = useTheme(); 
 
   useEffect(() => {
+    const currentRef = observerRef.current; 
     const observer = new IntersectionObserver(handleObserver, {
-      root: null, rootMargin: '20px', threshold: 1.0,
+      root: null, rootMargin: '200px', threshold: 0.1,
     });
-    if (observerRef.current) observer.observe(observerRef.current);
+    if (currentRef) observer.observe(currentRef);
+  
     return () => {
-      if (observerRef.current) observer.unobserve(observerRef.current);
+      if (currentRef) observer.unobserve(currentRef);
     };
   }, [handleObserver]);
 
-  if (isInitialLoading) <SpinnerWrapper><Spinner /></SpinnerWrapper>
+  if (isInitialLoading) return <SpinnerWrapper><Spinner /></SpinnerWrapper>
   if (error) return <p>Error: {error.message}</p>;
 
   return (
@@ -34,8 +38,9 @@ const { posts, isInitialLoading, error, observerRef,
         <EmptyPosts />
       )}
       <div ref={observerRef} style={{ height: '1px' }} />
-      {isFetchingMore
-        && <Loading><Spinner /></Loading>}
+      <Loading>
+        {isFetchingMore && <Spinner />}
+      </Loading>
     </Container>
   );
 };
@@ -54,14 +59,15 @@ const PostWrapper = styled.article<{ $theme: string }>`
   padding: 7px 12px 4px 12px;
   border-bottom: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? '#6f778b32'
+      ? '#6f778b52'
       : '#a8b3cf62'};
   cursor: pointer;
 `;
 const Loading = styled.div`
   display: flex;
   justify-content: center;
-  margin-Top: 20px;
+  align-items: center;
+  height: 50px;
 `;
 const SpinnerWrapper = styled.div`
   display: flex;

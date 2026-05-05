@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { LuSearch } from "react-icons/lu";
 import { useRef, useState } from "react";
-import { useTheme } from "../../../store/theme/ThemeContext";
-import { ModalSearch } from "../../features/user/modals/ModalSearch";
+import { useTheme } from "@/store/theme";
+import { ModalSearch } from "@features/user/modals/ModalSearch";
 
 export const Search = () => {
   const [isOpenModalSearch, setIsOpenModalSearch] = useState<boolean>(false);

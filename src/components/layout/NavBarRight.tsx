@@ -4,8 +4,8 @@ import { useQuery } from "@apollo/client/react";
 import { Notifications } from './components/Notifications'
 import { useNotificationStore, useTheme, useFollowerStore, useAuthStore } from "@/store";
 import { GET_NOTIFICATIONS, GET_FOLLOWER } from "@/graphql/query";
-import { ModalFollower } from "../features/notification/ModalFollower";
-import { ModalNotification } from "../features/notification/ModalNotification";
+import { ModalFollower } from "@features/notification/ModalFollower";
+import { ModalNotification } from "@features/notification/ModalNotification";
 import type { GetFollowerProps, GetNotifiProps } from "./components/types";
 import { PiHeart } from "react-icons/pi";
 import { GrNotification } from "react-icons/gr";
@@ -36,11 +36,11 @@ export const NavBarRight = () => {
       addAllNotifications(edges.map(el => el.node));
       if (pageInfo) setPageInfo(pageInfo);
     }
-  }, [data?.getNotifications?.pageInfo.endCursor])
+  }, [data, addAllNotifications, setPageInfo])
 
   const handleFetchMore = () => {
     if (!pageInfo?.hasNextPage) return;
-    startTransition(async () => {
+    startTransition( async () => {
       const { data: dataFetchMore } = await fetchMore({
         variables: { first: 2, after: pageInfo.endCursor }
       })
@@ -60,11 +60,11 @@ export const NavBarRight = () => {
       addAllFollowers(edges.map(el => el.node));
       if (pageInfo) setPageInfoFollower(pageInfo);
     }
-  }, [dataFollower?.getFollowers?.pageInfo.endCursor])
+  }, [dataFollower, addAllFollowers, setPageInfoFollower])
 
   const FetchMoreFollower = () => {
     if (!pageInfoFollower?.hasNextPage) return;
-    startTransitionFollower(async () => {
+    startTransitionFollower( async () => {
       const { data: dataFetchFollower } = await fetchMoreFollower({
         variables: { first: 2, after: pageInfoFollower.endCursor }
       })

@@ -1,17 +1,7 @@
 import styled from 'styled-components';
-import { MdInsertEmoticon } from "react-icons/md";
-import { RiListRadio } from "react-icons/ri";
-import { HiOutlineLocationMarker } from "react-icons/hi";
-import { IoImageOutline } from "react-icons/io5";
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 import { useTheme } from '@/store/theme';
-
-export const actions = [
-  { Icon: IoImageOutline, type: 'file' },
-  { Icon: RiListRadio },
-  { Icon: MdInsertEmoticon },
-  { Icon: HiOutlineLocationMarker },
-];
+import { actions } from './actions.constants';
 
 interface ActionProps {
   text: string;
@@ -40,6 +30,10 @@ export const Actions = ({ text, setFile, fileInputRef, handleCreatePost, data }:
            key={i}
            $type={type}
            $themeMode={theme}
+           data-testid={type === 'file' ? 'postform-action-file' : undefined}
+           role={type === 'file' ? 'button' : undefined}
+           aria-label={type === 'file' ? 'Add media' : undefined}
+           tabIndex={type === 'file' ? 0 : undefined}
            onClick={type === 'file'? handleFileClick : undefined }
           >
             <Icon size={22} color = '#1877F2' />

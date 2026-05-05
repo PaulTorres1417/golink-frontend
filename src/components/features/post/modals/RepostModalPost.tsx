@@ -3,9 +3,9 @@ import { RepostPostPreview } from "./RepostPostPreview";
 import { createPortal } from "react-dom";
 import { PostForm } from "../PostForm";
 import { useTheme, useAuthStore } from '@/store';
-import { FaUserCircle } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import type { RepostSource } from "./types";
+import { Avatar } from "@/components/ui";
 
 type RepostModalProps = {
   onClose: () => void;
@@ -38,9 +38,7 @@ export const RepostModalPost = ({ onClose, source }: RepostModalProps) => {
           <ThreadContainer>
             <AvatarColumn>
               <AvatarWrapper>
-                {user?.avatar
-                  ? <img src={user.avatar} />
-                  : <FaUserCircle size={40} />}
+                <Avatar avatarUrl={user?.avatar}/>
               </AvatarWrapper>
               <Line $isDark={theme} />
             </AvatarColumn>
@@ -148,18 +146,7 @@ const AvatarColumn = styled.div`
 `;
 
 const AvatarWrapper = styled.div`
-  width: 40px;
-  height: 40px;
   margin-top: 15px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-
-  img {              
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 
 const Line = styled.div<{ $isDark: string }>`

@@ -18,28 +18,29 @@ export const CommentInput = ({ post, postId, parentCommentId }: CommentInputProp
 
   return (
     <Container $theme={theme}>
-      <Avatar avatarUrl={user?.avatar} />
+      <AvatarWrapper>
+        <Avatar avatarUrl={user?.avatar} />
+      </AvatarWrapper>
       <InputRow>
         <FakeInput
           id="post-text"
           name="post-text"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
-          placeholder={`Post your reply${!post || user?.name === post.user_id.name
-            ? ""
-            : ` to @${getDisplayName(post.user_id.name)}`}
-            }`}
+          placeholder={`Post your reply${!post || user?.name === post.user_id.name ? "" : ` to @${getDisplayName(post.user_id.name)}`}`}
           $themeMode={theme}
           rows={1}
         />
-        <ReplyButton
+      </InputRow>
+      <ButtonWrapper $themeMode={theme}>
+        <button
           onClick={handleSend}
-          $thmeMode={theme}
           disabled={!comment.trim()}
         >
           Reply
-        </ReplyButton>
-      </InputRow>
+        </button>
+      </ButtonWrapper>
+      
     </Container>
   );
 };
@@ -47,29 +48,39 @@ export const CommentInput = ({ post, postId, parentCommentId }: CommentInputProp
 const Container = styled.div<{ $theme: string }>`
   width: 100%;
   display: flex;
+  gap: 12px;
   align-items: flex-start;
+  padding: 12px;
   border-bottom: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? 'rgba(132, 130, 130, 0.37)'
+      ? '#6f778b52'
       : 'rgba(197, 197, 197, 0.41)'};
-  padding: 14px 12px;
+
+`;
+
+const AvatarWrapper = styled.div`
+  display: flex;
+  width: 48px;
+  justify-content: flex-start;
+  align-items: flex-start;
+ 
 `;
 
 const InputRow = styled.div`
   display: flex;
-  align-items: flex-end;
   flex: 1;
-  gap: 8px;
-  max-width: 100%;
+  align-items: stretch;
+  min-width: 0;
 `;
 
-const FakeInput = styled(TextareaAutosize) <{ $themeMode: string }>`
-  flex: 1;
+const FakeInput = styled(TextareaAutosize)<{ $themeMode: string }>`
   font-family: inherit;
+  width: 100%;
   background: transparent;
-  padding: 8px 10px;
   font-size: 16px;
   border: none;
+  padding: 10px 0;
+  margin: 0;
   outline: none;
   resize: none;
   color: ${({ $themeMode }) => ($themeMode === 'dark' ? '#fff' : '#000')};
@@ -79,25 +90,33 @@ const FakeInput = styled(TextareaAutosize) <{ $themeMode: string }>`
   }
 `;
 
-const ReplyButton = styled.button<{ $thmeMode: string }>`
-  background-color: #1870f4;
-  color: white;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 999px;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  white-space: nowrap;
+const ButtonWrapper = styled.div<{ $themeMode: string }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  button {
+    min-width: 80px;
+    height: 36px;
+    background-color: #1870f4;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
 
-  &:hover:not(:disabled) {
-    background-color: #1a8cd8;
-  }
+    &:hover:not(:disabled) {
+      background-color: #1a8cd8;
+    }
 
-  &:disabled {
-    background-color: ${({ $thmeMode }) => ($thmeMode === 'dark' ? '#6e6d6dff' : '#ccc')};
-    color: #000;
-    cursor: not-allowed;
+    &:disabled {
+      background-color: ${({ $themeMode }) => ($themeMode === 'dark' ? '#6e6d6dff' : '#ccc')};
+      color: #000;
+      cursor: not-allowed;
+    }
   }
+  
 `;

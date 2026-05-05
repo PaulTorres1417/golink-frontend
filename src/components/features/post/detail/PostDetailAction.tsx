@@ -115,7 +115,7 @@ export const PostDetailAction = ({ comment }: CommentProps) => {
 
 const ActionsContainer = styled.div`
   width: 100%;
-  margin: 8px 0px;
+  margin: 5px 0px;
   display: flex;
   justify-content: space-between;
 `;
@@ -148,7 +148,7 @@ const Action = styled.div<{ $themeMode: string, $isRepost?: boolean }>`
     $isRepost
       ? '#00ba7c'
       : ($themeMode === 'dark'
-        ? 'rgba(113, 118, 123, 1)'
+        ? '#a8b3cfbe'
         : 'rgba(83, 100, 113, 1)')};
 
   &.comment:hover ${Inner} {
@@ -178,10 +178,10 @@ const SavedAction = styled(Action) <{
       ? '#1870f4'
       : $hasCount
         ? ($themeMode === 'dark'
-          ? 'rgba(139, 152, 165, 1)'
+          ? '#a8b3cfbe'
           : 'rgba(83, 100, 113, 1)')
         : ($themeMode === 'dark'
-          ? 'rgba(96, 106, 117, 1)'
+          ? '#a8b3cfbe'
           : 'rgba(83, 100, 113, 1)')};
 
   &:hover ${Inner} {

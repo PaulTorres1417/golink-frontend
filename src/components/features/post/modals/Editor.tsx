@@ -12,7 +12,12 @@ interface EditorProps {
 export const Editor = ({ text, setText, name, size, data }: EditorProps) => {
   const { theme } = useTheme();
   const id = useId();
-
+  const firstName = name?.split(' ')[0] ?? '';
+  const placeholder = data
+    ? 'Comment'
+    : firstName
+      ? `What's happening, ${firstName}?`
+      : "What's happening?";
   return (
     <Container>
       <FakeInput
@@ -21,7 +26,7 @@ export const Editor = ({ text, setText, name, size, data }: EditorProps) => {
         maxLength={300}
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder={data? "Comment" : `What's happening, ${name?.split(" ")[0]}?`}
+        placeholder={placeholder}
         $size={size}
         $themeMode={theme}
       />

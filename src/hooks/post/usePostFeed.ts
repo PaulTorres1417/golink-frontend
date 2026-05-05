@@ -1,7 +1,7 @@
 import { useQuery, useSubscription } from '@apollo/client/react';
 import type { FeedPostsData, PostViewedSubscription, ReactionPostSubscription } from './types';
 import { useCallback, useEffect, useRef } from 'react';
-import { useAuthStore, usePostStore, useTheme } from '@/store';
+import { useAuthStore, usePostStore } from '@/store';
 import type { PostCommentCountSubscription } from '@/pages/post/types';
 import { FEED_POSTS } from '@/graphql/query';
 import { REACTION_POST_SUBSCRIPTION, VIEWED_POST_SUBSCRIPTION, 
@@ -16,14 +16,13 @@ export const usePostFeed = () => {
 
   const posts = usePostStore((state) => state.posts);
   const appendPosts = usePostStore((state) => state.appendPosts);
-  const observerRef = useRef<HTMLDivElement | null>(null);
   const postRef = useRef(posts);
   const user = useAuthStore((state) => state.user)
-  const { theme } = useTheme();
   const updatePostFields = usePostStore((state) => state.updatePostFields);
   const isInitialLoading = loading && networkStatus === 1;
   const isFetchingMore = networkStatus === 3;
 
+  console.log('posts', posts);
   useEffect(() => {
     postRef.current = posts;
   }, [posts])
@@ -31,10 +30,10 @@ export const usePostFeed = () => {
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
-      if (
-        target.isIntersecting &&
-        data?.feedPosts.pageInfo.hasNextPage
-      ) {
+      if (!target.isIntersecting) return;
+       if (isFetchingMore) return;
+      if(!data?.feedPosts.pageInfo.hasNextPage) return;
+       {
         fetchMore({
           variables: {
             first: 5,
@@ -57,7 +56,7 @@ export const usePostFeed = () => {
         });
       }
     },
-    [data, fetchMore]
+    [data, fetchMore, isFetchingMore]
   );
 
   useSubscription<PostViewedSubscription>(VIEWED_POST_SUBSCRIPTION, {
@@ -112,7 +111,10 @@ export const usePostFeed = () => {
       appendPosts(filteredPosts);
     }
   }, [data, appendPosts, posts]);
-
-  return { posts, isInitialLoading, error, observerRef, 
-    theme, isFetchingMore, handleObserver };
+{/*
+  useEffect(() => {
+    return () => resetPosts();
+  }, [])
+*/}
+  return { posts, isInitialLoading, error, isFetchingMore, handleObserver };
 }

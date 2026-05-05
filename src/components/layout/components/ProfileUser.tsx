@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { SlOptions } from "react-icons/sl";
 import { useState } from "react";
-import { ModalExit } from "../../ui/ModalExit";
-import { useAuthStore } from "../../../store/auth/useAuthStore";
+import { ModalExit } from "@components/ui";
+import { useAuthStore } from "@store/auth";
 import { FaUserCircle } from "react-icons/fa";
-import { useTheme } from "../../../store/theme/ThemeContext";
+import { useTheme } from "@store/theme";
 
 export const ProfileUser = ({ isCollapsed }: { isCollapsed: boolean }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -25,7 +25,7 @@ export const ProfileUser = ({ isCollapsed }: { isCollapsed: boolean }) => {
           user?.avatar ? (
             <img src={user.avatar} alt={user.avatar} />
           ) : (
-            <FaUserCircle size={37} />
+            <FaUserCircle size={42} />
           )
         }
       </Avatar>
@@ -69,7 +69,7 @@ const Container = styled.div<{ $isCollapsed: boolean, $theme: string }>`
   border-radius: 30px;
   border: 1px solid ${({ $theme }) =>
     $theme === 'dark'
-      ? '#6f778b32'
+      ? '#6f778b52'
       : '#a8b3cf62'};
   position: relative; 
 
@@ -88,7 +88,10 @@ const Avatar = styled.div`
       height: 42px;
       border-radius: 50%;
       object-fit: cover;
-   }
+    }
+   svg {
+      color: #94a3b8;
+    }
 `;
 
 const Information = styled.div<{ $isCollapsed?: boolean, $theme: string }>`

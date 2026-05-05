@@ -1,8 +1,8 @@
-import { Friends } from "../friends/Friends";
+import { Notifications } from "../notifications/Notifications";
 
 export const Explore = () => {
   return (
-    <Friends />
+    <Notifications />
   );
 };
 

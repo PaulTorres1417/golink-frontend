@@ -65,7 +65,7 @@ const CenterColumn = styled.div<{ $theme: string }>`
   flex-direction: column;
   border-right: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? '#6f778b32' 
+      ? '#6f778b52' 
       : '#a8b3cf62'};
 `;
 
@@ -77,7 +77,7 @@ const CenterContent = styled.main<{ $theme: string }>`
   justify-content: center;
   border-left: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? '#6f778b32' 
+      ? '#6f778b52' 
       : '#a8b3cf62'};
 `;
 

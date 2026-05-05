@@ -1,33 +1,36 @@
 import styled from "styled-components";
 import { FaLock } from "react-icons/fa6";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { LuKeyRound } from "react-icons/lu";
 import { Spinner } from "@/components/ui";
 import { useResetPassword } from "@/hooks/auth/useResetPassword";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
+  const [showPassword, setShowPassword] = useState(false);
   const token = searchParams.get('token');
-  const { handleSubmit, error, loading, message, 
+  const { handleSubmit, error, loading, message,
     password, setPassword } = useResetPassword(token);
 
   return (
     <Overlay>
       <ModalCard>
         <ModalHeader>
-          <WelcomeText>{!message 
-            ? 'Set a new password' 
+          <WelcomeText>{!message
+            ? 'Set a new password'
             : 'successful change'}
           </WelcomeText>
           <Title>
-            Reset password 
-            <FaLock size={20}/>
+            Reset password{" "}
+            <FaLock size={20} />
           </Title>
           <Parrafo>
-            {!message 
+            {!message
               ? 'Enter your new password below to update your account.'
-              :'Your password has been successfully updated.'}
+              : 'Your password has been successfully updated.'}
           </Parrafo>
         </ModalHeader>
 
@@ -45,13 +48,16 @@ export default function ResetPassword() {
                     <LuKeyRound />
                   </InputIcon>
                   <Input
-                    type="text"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Ingresa tu nueva contraseña"
                     maxLength={50}
                     value={password}
                     $error={!!error}
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <ToggleIcon type="button" onClick={() => setShowPassword((v) => !v)}>
+                    {showPassword ? <LuEyeOff size={18} /> : <LuEye size={18} />}
+                  </ToggleIcon>
                 </InputWrapper>
               )
             }
@@ -60,7 +66,7 @@ export default function ResetPassword() {
           {
             !message && (
               <Button type="submit" disabled={loading}>
-                {loading ? <Spinner color={'#fff'}/> : "Reset password"}
+                {loading ? <Spinner color={'#fff'} /> : "Reset password"}
               </Button>
             )
           }
@@ -233,4 +239,23 @@ const SuccessMsg = styled.span`
   color: #10b981;
   font-weight: 500;
   margin-top: -2px;
+`;
+
+const ToggleIcon = styled.button`
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #cbd5e1;
+  }
 `;

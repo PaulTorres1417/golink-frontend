@@ -35,7 +35,7 @@ export const TrendingPostCard = () => {
       </ContentArea>
     </Container>
     <Footer $theme={theme}>
-        <span>© 2026 Paul Torres H. Designed & developed by me.</span>
+        { !loading && <span>© 2026 Paul Torres H. Designed & developed by me.</span>}
     </Footer>
     </>
   );
@@ -53,7 +53,7 @@ const ContainerUser = styled.div`
 const Container = styled.div<{ $theme: string }>`
   border: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? '#6f778b32' 
+      ? '#6f778b52' 
       : '#a8b3cf62'};
   border-radius: 20px;
 `;

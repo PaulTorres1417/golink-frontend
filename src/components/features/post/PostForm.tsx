@@ -1,28 +1,22 @@
 import styled from "styled-components";
-import { FaUserCircle } from "react-icons/fa";
 import { useAuthStore, useTheme } from '@/store';
 import { useCreatePost } from "@/hooks/post";
 import { Editor } from "./modals/Editor";
 import { Actions } from "./modals/Actions";
-import type { RepostSource } from "./modals/types";
+import { Avatar } from "@/components/ui";
+import type { PostFormProps } from "./types";
 
-type PostFormProps = {
-  data?: RepostSource;
-  hideAvatar: boolean;
-  onClose?: () => void;
-  border?: boolean;
-}
 export const PostForm = ({ hideAvatar, data, onClose, border }: PostFormProps) => {
   const { text, setText, file, setFile, previewUrl,
     fileInputRef, handleRemoveFile, handleCreatePost } = useCreatePost(data, onClose);
   const user = useAuthStore((state) => state.user);
   const { theme } = useTheme();
   const isRepost = data?.type ? true : false;
-
+  
   return (
     <Container $isRepost={isRepost} $theme={theme} $border={border}>
       {!hideAvatar 
-        && <AvatarForm url={user?.avatar || null} />
+        && <Avatar avatarUrl={user?.avatar} />
       }
       <TextContainer>
         <Editor 
@@ -59,27 +53,16 @@ export const PostForm = ({ hideAvatar, data, onClose, border }: PostFormProps) =
   );
 };
 
-const AvatarForm = ({ url }: { url: string | null }) => {
-  return (
-    <AvatarContainer>
-      {url ? (
-        <img src={url} alt={url} />
-      ) : (
-        <FaUserCircle size={40} />
-      )}
-    </AvatarContainer>
-  )
-}
 const Container = styled.div<{ $isRepost: boolean, $theme: string, $border?: boolean }>`
   width: 100%;
   display: flex;
-  gap: 14px;
+  gap: 5px;
   padding: ${({ $isRepost }) => $isRepost ? "14px 3px" : "14px 12px"};
   border-bottom: ${({ $border, $theme }) => 
     $border 
       ? 'none' 
       : $theme === 'dark'
-        ? '1px solid #6f778b32'
+        ? '1px solid #6f778b52'
         : '1px solid #a8b3cf62'};
 `;
 const TextContainer = styled.div`
@@ -121,20 +104,5 @@ const CloseButton = styled.button`
 
   &:hover {
     background: rgba(182, 197, 201, 0.8);
-  }
-`;
-
-const AvatarContainer = styled.div`
-  flex-shrink: 0;
-  display: flex;
-  padding-top: 10px;
-  justify-content: center;
-  width: 40px;
-  height: 100%;
-  img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
   }
 `;

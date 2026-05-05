@@ -25,7 +25,7 @@ export default function VerifyEmail() {
     <Container>
       {status === 'loading' && (
         <CardContent status={status}>
-          <Spinner color={'#493aeeff'}/>
+          <Spinner color={'#fff'}/>
         </CardContent>
       )}
       {status === 'error' && (
@@ -40,11 +40,10 @@ export default function VerifyEmail() {
 
 
 const Container = styled.div`
-  min-height: 100vh;
+  height: 100vh;
   background: #131420;
   display: flex;
   align-items: center;
-  margin-top: 100px;
   justify-content: center;
   padding: 20px;
 `;

@@ -15,7 +15,7 @@ export type SavedPostProps = {
 export type SavedCommentProps = {
   getSavedComment: CommentProps[];
 }
-export const SavedItems = () => {
+export const BookMarks = () => {
   const { data, loading, error } = useQuery<SavedPostProps>(SAVED_POST_QUERY);
   const { data: commentData, loading: loadingComments } = useQuery<SavedCommentProps>(SAVED_COMMENT_QUERY);
 
@@ -34,7 +34,7 @@ export const SavedItems = () => {
   ].sort((a, b) =>
     new Date(b.data.created_at).getTime() - new Date(a.data.created_at).getTime()
   );
-  let countItems = allItems.length;
+  const countItems = allItems.length;
   return (
   <Container>
     <Header>

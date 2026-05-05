@@ -8,21 +8,24 @@ import { PostFeedVideo } from './PostFeedVideo';
 import { dayjs } from '@/utils';
 import { usePostContent } from '@/hooks/post/usePostContent';
 import { getDisplayName } from '@/utils/user/user';
+import { useTheme } from '@/store';
+import { useState } from 'react';
 
 interface Props {
   data: PostQueryProps;
 }
 
 export const PostContent = ({ data }: Props) => {
-  const { handlePostDetails, isOpenOption,
-    setIsOpenOption, theme } = usePostContent({ data });
+  const [isOpenOption, setIsOpenOption] = useState<boolean>(false);
+  const { theme } = useTheme();
+  const { handlePostDetails } = usePostContent({ data });
 
 
   const toggleOptions = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsOpenOption(prev => !prev);
+    setIsOpenOption(!isOpenOption);
   };
-  const handleUsername = data.user_id.email?.split("@")[0] ?? "anonymous";
+  const handleUserEmail = data.user_id.email?.split("@")[0] ?? "anonymous";
 
   const handleClick = () => {
     handlePostDetails(data);
@@ -36,14 +39,14 @@ export const PostContent = ({ data }: Props) => {
             <H2 $theme={theme}>
               <strong>{getDisplayName(data.user_id.name)}</strong>
             </H2>
-            <span>@{handleUsername} &middot; {dayjs(data.created_at).fromNow(true)}</span>
+            <span>@{handleUserEmail} &middot; {dayjs(data.created_at).fromNow(true)}</span>
           </SubTitle>
           <Option onClick={toggleOptions}>
             <span>
               <SlOptions size={17} style={{
                 color: !isOpenOption
                   ? theme === 'dark'
-                    ? '#a8b3cf'
+                    ? '#909296ff'
                     : 'rgba(83, 100, 113, 1)'
                   : '#1870f4'
               }} />

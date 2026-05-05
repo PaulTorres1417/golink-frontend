@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import { FaUserCircle } from "react-icons/fa";
 import { PostFeedVideo } from "./PostFeedVideo";
 import type { Post } from "./types";
 import type { CommentProps } from "@/pages/post/types";
 import { useRepost } from "@/hooks/repost/useRepost";
+import { Avatar } from "@/components/ui";
+import { useTheme } from "@/store";
 
 type Props = {
   original_post: Post | null;
@@ -11,17 +12,16 @@ type Props = {
 }
 
 export const RepostCard = ({ original_post, original_comment }: Props) => {
-  const { handleClick, theme } = useRepost({ post: original_post, comment: original_comment });
+  const { theme } = useTheme();
+  const { handleClick } = useRepost({ post: original_post, comment: original_comment });
   const data = original_post ?? original_comment;
-  
+
+  if (!data) return null;
+
   return (
     <Card onClick={handleClick}>
       <Header>
-        <Avatar>
-          {data?.user_id.avatar
-            ? <img src={data.user_id.avatar} alt="avatar" />
-            : <FaUserCircle size={18} />}
-        </Avatar>
+        <Avatar avatarUrl={data.user_id.avatar} />
         <Name>{data?.user_id.name}</Name>
         <Handle>@{data?.user_id.email?.split("@")[0]}</Handle>
       </Header>
@@ -62,23 +62,6 @@ const Header = styled.div`
   align-items: center;
   gap: 6px;
   margin-bottom: 6px;
-`;
-
-const Avatar = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  color: rgba(113, 118, 123, 1);
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 
 const Name = styled.span`

@@ -29,11 +29,11 @@ const NavBarContainer = styled.nav<{ $theme: string }>`
   backdrop-filter: blur(10px);
   border-bottom: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? '#6f778b32' 
+      ? '#6f778b52' 
       : '#a8b3cf62'};
   border-left: 1px solid ${({ $theme }) => 
     $theme === 'dark' 
-      ? '#6f778b32' 
+      ? '#6f778b52' 
       : '#a8b3cf62'};
 `;
 

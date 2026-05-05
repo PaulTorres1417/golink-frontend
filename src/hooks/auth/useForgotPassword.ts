@@ -5,9 +5,9 @@ import type { ForgotPasswordProps } from "./types";
 import { FORGOT_PASSWORD } from "@/graphql/mutation/auth/forgotPassword";
 
 export const useForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const [forgotPassword, { loading }] = useMutation<ForgotPasswordProps>(FORGOT_PASSWORD);
 
@@ -33,8 +33,8 @@ export const useForgotPassword = () => {
         return;
       }
       setMessage(data.forgotPassword.message);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Error unknown");
     }
   };
 

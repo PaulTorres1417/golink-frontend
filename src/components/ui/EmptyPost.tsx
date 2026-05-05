@@ -7,7 +7,7 @@ export const EmptyPosts = () => {
       <Circle>
         <BsCamera />
       </Circle>
-      <Text>Aun no hay publicaciones</Text>
+      <Text>There are no posts yet.</Text>
     </Container>
   );
 }

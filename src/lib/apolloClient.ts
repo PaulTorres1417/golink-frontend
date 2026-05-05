@@ -1,29 +1,29 @@
 import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, Observable } from '@apollo/client';
 import { SetContextLink } from '@apollo/client/link/context';
-import { ErrorLink } from '@apollo/client/link/error';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { TokenStore } from '@/store/auth/tokenStore';
+import { silentRefresh } from './auth';
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000/graphql',
-  credentials: 'include'
+  uri: import.meta.env.VITE_API_URL,
+  credentials: 'include',
 });
 
-const wsLink = new GraphQLWsLink(
-  createClient({
-    url: 'ws://localhost:4000/graphql',
-    connectionParams: () => {
-      const token = TokenStore.get();
-      return {
-        authorization: token ? `Bearer ${token}` : '',
-      };
-    },
-  })
-);
+const wsClient = createClient({
+  url: import.meta.env.VITE_WS_URL,
+  connectionParams: () => {
+    const token = TokenStore.get();
+    return { authorization: token ? `Bearer ${token}` : '' };
+  },
+  shouldRetry: () => true,
+  retryAttempts: 5,
+});
 
-const authLink = new SetContextLink((prevContext, _operation) => {
+const wsLink = new GraphQLWsLink(wsClient);
+
+const authLink = new SetContextLink((prevContext) => {
   const token = TokenStore.get();
   return {
     headers: {
@@ -33,32 +33,68 @@ const authLink = new SetContextLink((prevContext, _operation) => {
   };
 });
 
-const errorLink = new ErrorLink(({ error, operation, forward }) => {
-  if (error && 'statusCode' in error && (error as any).statusCode === 401) {
-    return new Observable((observer) => {
-      // importación dinámica para evitar dependencia circular
-      import('./auth').then(({ silentRefresh }) => {
-        silentRefresh()
-          .then((newToken) => {
-            if (!newToken) {
-              window.location.href = '/login';
-              return;
-            }
-            operation.setContext(({ headers = {} }: { headers: Record<string, string> }) => ({
-              headers: {
-                ...headers,
-                authorization: `Bearer ${newToken}`,
-              },
-            }));
-            forward(operation).subscribe(observer);
-          })
-          .catch(() => {
-            window.location.href = '/login';
-          });
-      });
+let refreshPromise: Promise<string | null> | null = null;
+
+async function getRefreshedToken(): Promise<string | null> {
+  if (refreshPromise) return refreshPromise;
+
+  refreshPromise = silentRefresh()
+    .then((newToken) => {
+      if (newToken) {
+        wsClient.terminate();
+      }
+      return newToken;
+    })
+    .catch(() => null)
+    .finally(() => { refreshPromise = null; });
+
+  return refreshPromise;
+}
+
+const errorLink = new ApolloLink((operation, forward) => {
+  return new Observable((observer) => {
+    const sub = forward(operation).subscribe({
+      next: (result) => {
+        const isUnauthorized = result.errors?.some(e =>
+          e.message.includes('No autorizado') ||
+          e.message.toLowerCase().includes('unauthorized') ||
+          e.message.includes('TOKEN_EXPIRED')
+        );
+
+        if (isUnauthorized) {
+          getRefreshedToken()
+            .then((newToken) => {
+              if (!newToken) {
+                window.location.href = '/';
+                return;
+              }
+              TokenStore.set(newToken);
+              operation.setContext(({ headers = {} }: { headers: Record<string, string> }) => ({
+                headers: {
+                  ...headers,
+                  authorization: `Bearer ${newToken}`,
+                },
+              }));
+              forward(operation).subscribe({
+                next: observer.next.bind(observer),
+                error: observer.error.bind(observer),
+                complete: observer.complete.bind(observer),
+              });
+            })
+            .catch(() => {
+              window.location.href = '/';
+            });
+        } else {
+          observer.next(result);
+          observer.complete();
+        }
+      },
+      error: observer.error.bind(observer),
+      complete: observer.complete.bind(observer),
     });
-  }
-  return undefined;
+
+    return () => sub.unsubscribe();
+  });
 });
 
 const splitLink = ApolloLink.split(

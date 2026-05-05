@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client';
 import { useSubscription } from '@apollo/client/react';
-import { useAuthStore } from '../../../store/auth/useAuthStore';
-import { useNotificationStore } from '../../../store/notifications/useNotificationStore';
-import { NOTIFICATIONS_FIELDS } from '../../../graphql/fragment/notification/notificationPostReaction';
+import { useAuthStore } from '@store/auth/useAuthStore';
+import { useNotificationStore } from '@store/notifications/useNotificationStore';
+import { NOTIFICATIONS_FIELDS } from '@/graphql/fragment/notification/notificationPostReaction';
 import type { LikeCommentProps, LikePostProps, NotificationProps, RepostCommentEventProps, RepostPostEventProps } from './types';
-import { useFollowerStore } from '../../../store/followers/useFollowerStore';
+import { useFollowerStore } from '@/store/followers/useFollowerStore';
 
 const NEW_FOLLOWER_SUB = gql`
   ${NOTIFICATIONS_FIELDS}

@@ -23,7 +23,8 @@
       "@/*": ["src/*"],
       "@components/*": ["src/components/*"],
       "@features/*": ["src/components/features/*"],
-      "@public/*": ["public/*"]
+      "@public/*": ["public/*"],
+      "@store/*": ["src/store/*"],
     },
     /* Linting */
     "strict": true,

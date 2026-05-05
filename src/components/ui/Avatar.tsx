@@ -1,3 +1,4 @@
+import { useTheme } from "@/store";
 import { FaUserCircle } from "react-icons/fa";
 import styled from "styled-components";
 
@@ -10,40 +11,60 @@ const cloudinaryAvatar = (url: string, size: number) => {
 
 interface UserProps {
   avatarUrl?: string | null;
+  size?: number;
 }
 
-export const Avatar: React.FC<UserProps> = ({ avatarUrl }) => {
+export const Avatar = ({ avatarUrl, size = 40 }: UserProps) => {
+  const { theme } = useTheme();
+
   return (
-    <AvatarContainer>
+    <AvatarContainer $size={size}>
       {avatarUrl ? (
         <img
-          src={cloudinaryAvatar(avatarUrl, 40)}
+          src={cloudinaryAvatar(avatarUrl, size)}
           srcSet={`
-            ${cloudinaryAvatar(avatarUrl, 40)} 1x,
-            ${cloudinaryAvatar(avatarUrl, 80)} 2x
+            ${cloudinaryAvatar(avatarUrl, size)} 1x,
+            ${cloudinaryAvatar(avatarUrl, size * 2)} 2x
           `}
           alt="avatar"
-          width={40}
-          height={40}
+          width={size}
+          height={size}
         />
       ) : (
-        <FaUserCircle size={40} />
+        <AvatarFallback $theme={theme} $size={size}>
+        <FaUserCircle size={size} />
+        </AvatarFallback>
       )}
     </AvatarContainer>
   );
 };
 
-const AvatarContainer = styled.div`
+const AvatarContainer = styled.div<{ $size: number }>`
   flex-shrink: 0;
   display: flex;
-  margin-top: 4px;
   justify-content: center;
-  width: 40px;
-  height: 100%;
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
   img {
-    width: 40px;
-    height: 40px;
+    width: ${({ $size }) => $size}px;
+    height: ${({ $size }) => $size}px;
     border-radius: 50%;
     object-fit: cover;
+  }
+`;
+
+const AvatarFallback = styled.div<{ $theme: string, $size: number }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
+  background: ${({ $theme }) => $theme === 'dark' ? '#000' : '#fff'};
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    width: ${({ $size }) => $size}px;
+    height: ${({ $size }) => $size}px;
+    color: ${({ $theme }) => $theme === 'dark' ? '#94a3b8' : '#94a3b8;'};
   }
 `;

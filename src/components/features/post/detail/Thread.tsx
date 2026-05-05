@@ -94,7 +94,7 @@ const Information = styled.div<{ $theme: string }>`
     font-weight: 300;
     color: ${({ $theme }) =>
     $theme === 'dark'
-      ? 'rgba(113, 118, 123, 1)'
+      ? '#8698c4ff'
       : 'rgba(83, 100, 113, 1)'};
   }
 `;
@@ -141,11 +141,11 @@ const PostInformation = styled.div<{ $themeMode: string }>`
   font-size: 14px;
   border-bottom: 1px solid ${({ $themeMode }) =>
     $themeMode === 'dark'
-      ? 'rgba(132, 130, 130, 0.37)'
+      ? '#6f778b52'
       : 'rgba(197, 197, 197, 0.41)'};
 
   p{
     font-size: 15px;
-    color: ${({ $themeMode }) => $themeMode === 'dark' ? 'rgba(136, 140, 145, 1)' : 'rgba(53, 71, 99, 0.9)'}
+    color: ${({ $themeMode }) => $themeMode === 'dark' ? '#8698c4ff' : 'rgba(53, 71, 99, 0.9)'}
   }
 `;

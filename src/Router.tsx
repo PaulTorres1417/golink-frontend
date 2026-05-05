@@ -2,13 +2,13 @@ import { createBrowserRouter } from 'react-router-dom'
 import { Layout } from './components/layout/Layout'
 import { PrivateRoute } from './utils/routerPrivate/PrivateRouter'
 import { lazy } from 'react'
+import NotFollowing from './pages/user/NotFollowing'
 
 const Home = lazy(() => import('./pages/home/Home').then(m => ({ default: m.Home })))
-const Following = lazy(() => import('./pages/following/Following').then(m => ({ default: m.Following })))
+const Following = lazy(() => import('./pages/Following/Following').then(m => ({ default: m.Following })))
 const Explore = lazy(() => import('./pages/explore/Explore').then(m => ({ default: m.Explore })))
-const Friends = lazy(() => import('./pages/friends/Friends').then(m => ({ default: m.Friends })))
 const Notifications = lazy(() => import('./pages/notifications/Notifications').then(m => ({ default: m.Notifications })))
-const SavedItems = lazy(() => import('./pages/savedItems/SavedItems').then(m => ({ default: m.SavedItems })))
+const BookMarks = lazy(() => import('./pages/bookmarks/BookMarks').then(m => ({ default: m.BookMarks })))
 const Setting = lazy(() => import('./pages/settings/Setting').then(m => ({ default: m.Setting })))
 const Login = lazy(() => import('./pages/login/Login'))
 const PostThread = lazy(() => import('./pages/post/PostThread').then(m => ({ default: m.PostThread })))
@@ -22,7 +22,7 @@ const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
 
 export const router = createBrowserRouter([
   {
-    path: "/login",
+    path: "/",
     element: <Login />,
   },
   {
@@ -42,18 +42,18 @@ export const router = createBrowserRouter([
     element: <ResetPassword />,
   },
   {
-    path: "/",
+    path: "/home",
     element: <PrivateRoute />,
     children: [
       {
         element: <Layout />,
         children: [
           { index: true, element: <Home /> },
-          { path: "following", element: <Following /> },
+          { path: "not-following", element: <NotFollowing />},
           { path: "explore", element: <Explore /> },
-          { path: "friends", element: <Friends /> },
+          { path: "following", element: <Following /> },
           { path: "notifications", element: <Notifications /> },
-          { path: "bookmarks", element: <SavedItems /> },
+          { path: "bookmarks", element: <BookMarks /> },
           { path: "profile", element: <Profile /> },
           { path: "profile/:id", element: <ProfileGlobal />},
           { path: "setting", element: <Setting /> },

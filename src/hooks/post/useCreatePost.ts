@@ -14,7 +14,7 @@ type RepostSource = {
 }
 
 export const useCreatePost = (data?: RepostSource, onClose?: () => void ) => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -80,7 +80,12 @@ export const useCreatePost = (data?: RepostSource, onClose?: () => void ) => {
       id: tempId,
       clientId: '',
       content: text,
-      user_id: { id: user.id, name: user.name, avatar: user.avatar || null, email: user.email },
+      user_id: { 
+        id: user.id, 
+        name: user.name, 
+        avatar: user.avatar || null, 
+        email: user.email
+      },
       media: file ? {
         id: "temp-media" + tempId,
         url: URL.createObjectURL(file),
@@ -170,6 +175,7 @@ export const useCreatePost = (data?: RepostSource, onClose?: () => void ) => {
       }
     } catch (error) {
       console.error('Error creando post', error);
+      throw error;
     }
   };
 

@@ -1,10 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useMutation } from '@apollo/client/react';
-import { useNavigate } from 'react-router-dom';
-import type { LoginData, LoginVariable } from './types';
-import { LOGIN_MUTATION } from './types';
 import { MdErrorOutline } from "react-icons/md";
-import { useAuthStore } from '@/store/auth';
 import {
   BackgroundPattern, BrandName, BrandSection, BrandTagline, Button, ButtonIcon, MessageGlobal,
   Container, ContentWrapper, Divider, DividerLine, DividerText, FooterText, ForgotLink,
@@ -14,91 +8,24 @@ import {
 import {
   ArrowIcon, GithubIcon, GoogleIcon, LockIcon, MailIcon,
 } from '@/assets/icon/Icon';
-import loginhero from '@public/hero.mp4';
-import { TokenStore } from '@/store/auth/tokenStore';
 import { ModalRegister } from '@components/features/register/ModalRegister';
 import { Spinner } from '@/components/ui';
+import { useForceDarkMode } from '@/hooks/ui/useForceDarkMode';
+import { useLoginAuth } from '@/hooks/auth/useLoginAuth';
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [globalError, setGlobalError] = useState<string>('');
-  const [login, { loading }] = useMutation<LoginData, LoginVariable>(LOGIN_MUTATION);
+  useForceDarkMode();
+  const { handleGithub, handleGoogle, 
+    errors, globalError, handleSubmit, loading, setEmail, 
+    setPassword, setShowRegister, showRegister, setErrors, email, password } = useLoginAuth();
   const navigate = useNavigate();
-  const setUser = useAuthStore((state) => state.setUser);
-  const [showRegister, setShowRegister] = useState<boolean>(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(email))
-      newErrors.email = "Invalid email format";
-    if (!password.trim()) newErrors.password = "Password is required";
-    else if (password.length < 6) newErrors.password = "Minimum 6 characters";
-
-    setErrors(newErrors);
-    setGlobalError('');
-    return Object.keys(newErrors).length === 0;
-  };
-
-  useEffect(() => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const currentBodyBg = document.body.style.background;
-
-    document.documentElement.setAttribute('data-theme', 'dark');
-    document.body.style.background = '#131420';
-
-    return () => {
-      if (currentTheme) {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
-      document.body.style.background = currentBodyBg;
-    };
-  }, []);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setErrors({});
-    setGlobalError('');
-    try {
-      const { data } = await login({ variables: { email, password } });
-
-      if (data?.login.user && data.login.token) {
-        TokenStore.set(data.login.token);
-        setUser(data.login.user);
-      }
-      navigate('/');
-
-    } catch (error: any) {
-      const gqlError = error?.graphQLErrors?.[0];
-      if (gqlError && gqlError.extensions?.field) {
-        setErrors((prev) => ({
-          ...prev,
-          [gqlError.extensions.field]: gqlError.message,
-        }));
-      } else {
-        setGlobalError(
-          gqlError?.message || error?.message || 'Something went wrong'
-        );
-      }
-    }
-  };
-  {/* OAuth */ }
-  const handleGoogle = () => {
-    window.location.href = 'http://localhost:4000/auth/google';
-  };
-  const handleGithub = () => {
-    window.location.href = 'http://localhost:4000/auth/github';
-  };
 
   const handleClickForgot = () => {
     navigate('/forgot-password');
   }
+
   return (
     <Container>
       <BackgroundPattern />
@@ -108,8 +35,8 @@ export default function Login() {
           <BrandName><span>GO</span>LINX</BrandName>
           <BrandTagline>Connect with people, share your work and create opportunities.</BrandTagline>
           <Video>
-            <video autoPlay muted playsInline preload="auto">
-              <source src={loginhero} type="video/mp4" />
+            <video autoPlay muted playsInline preload="auto" poster="/hero.png">
+              <source src="/hero.mp4" type="video/mp4" {...{ fetchPriority: "high" }} />
             </video>
           </Video>
         </BrandSection>
@@ -128,7 +55,7 @@ export default function Login() {
             </WelcomeText>
           </FormHeader>
 
-          <Form onSubmit={handleLogin} noValidate>
+          <Form onSubmit={handleSubmit} noValidate>
             <Field
               icon={<MailIcon />}
               input={
@@ -170,7 +97,7 @@ export default function Login() {
               }
             />
             <Button type="submit" disabled={loading}>
-              {loading ? <Spinner color={'#fff'}/> : 'Sign in'}
+              {loading ? <Spinner color={'#fff'} /> : 'Sign in'}
               {
                 !loading && (
                   <ButtonIcon>
@@ -212,7 +139,6 @@ export default function Login() {
         <ModalRegister
           isOpen={showRegister}
           onClose={() => setShowRegister(false)}
-          onSwitchToLogin={() => setShowRegister(false)}
         />
       }
     </Container>

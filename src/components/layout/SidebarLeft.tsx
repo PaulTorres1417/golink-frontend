@@ -8,9 +8,9 @@ import { FiHome, FiSearch, FiUsers, FiBell, FiBookmark, FiSettings, FiUser, FiMo
 import { useEffect, useState } from 'react';
 
 const sidebarItems = [
-  { label: 'Home', icon: FiHome, to: '/' },
+  { label: 'Home', icon: FiHome, to: '/home' },
   { label: 'Explore', icon: FiSearch, to: 'explore' },
-  { label: 'Friends', icon: FiUsers, to: 'friends' },
+  { label: 'Following', icon: FiUsers, to: 'following' },
   { label: 'Notifications', icon: FiBell, to: 'notifications' },
   { label: 'Bookmarks', icon: FiBookmark, to: 'bookmarks' },
   { label: 'Theme', icon: FiMoon, to: 'x' },

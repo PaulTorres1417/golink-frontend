@@ -60,6 +60,7 @@ export type CreateCommentResponse = {
       avatar?: string | null;
     };
     post_id: {
+      __typename: string,
       id: string;
       content: string;
     };

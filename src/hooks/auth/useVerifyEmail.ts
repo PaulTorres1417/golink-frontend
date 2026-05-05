@@ -10,7 +10,7 @@ export const useVerifyEmail = (token: string | null) => {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
   const [status, setStatus] = useState<'loading' | 'error'>('loading');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState<string>('');
   const called = useRef(false);
 
   const [verifyEmail] = useMutation<VerifyProps>(VERIFY_EMAIL);
@@ -35,14 +35,15 @@ export const useVerifyEmail = (token: string | null) => {
         }
         setUser(data.verifyEmail.user);
         TokenStore.set(data.verifyEmail.token);
-        navigate('/');
-      } catch (err: any) {
+        navigate('/home');
+      } catch (error: unknown) {
+        const message = (error as { message?: string })?.message;
         setStatus('error');
-        setMessage(err.message);
+        setMessage(message || 'Error de red, verify conexion');
       }
     };
     verify();
-  }, [token]);
+  }, [token, verifyEmail, setUser, navigate]);
 
   return { status, message }
 

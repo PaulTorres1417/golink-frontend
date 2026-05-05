@@ -21,7 +21,7 @@ export const useModalNotification = ({ setIsOpenNotification }: Props) => {
         if (notifications.length > 0) {
           resetCount();
         }
-      }, [notifications]);
+      }, [notifications, resetCount]);
     
       useEffect(() => {
         const showAsRead = async () => {
@@ -37,7 +37,7 @@ export const useModalNotification = ({ setIsOpenNotification }: Props) => {
           }
         }
         if (notifications.length > 0) showAsRead();
-      }, [notifications])
+      }, [notifications, resetCount, show_As_Read])
     
     
       useEffect(() => {

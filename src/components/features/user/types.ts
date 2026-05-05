@@ -5,7 +5,10 @@ export type ListUserProps = {
     name: string;
     email: string;
     avatar?: string | null;
-  }
+    bio?: string | null;
+  };
+  info: boolean;
+  state: boolean;
 }
 
 export type UserFollowResponse = {

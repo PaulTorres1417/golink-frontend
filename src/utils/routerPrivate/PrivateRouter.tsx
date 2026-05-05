@@ -6,8 +6,9 @@ export const PrivateRoute = () => {
   const user = useAuthStore((state) => state.user);
   const token = TokenStore.get();
 
-  if (!user && !token) {
-    return <Navigate to="/login" replace />;
+  const isAuth = Boolean(user || token);
+  if (!isAuth) {
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;

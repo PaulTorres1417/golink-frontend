@@ -1,4 +1,5 @@
-import type { CommentProps } from "../../../pages/post/types";
+import type { CommentProps } from "@/pages/post/types";
+import type { RepostSource } from "./modals/types";
 
 export type User = {
   user: {
@@ -147,3 +148,17 @@ export type PostType = {
   isRepost: boolean;
 }
 
+
+export type PostFormProps = {
+  data?: RepostSource;
+  hideAvatar: boolean;
+  onClose?: () => void;
+  border?: boolean;
+}
+
+export type PostRepostCount = {
+  postRepost: {
+    id: string;
+    count_repost: number;
+  }
+}

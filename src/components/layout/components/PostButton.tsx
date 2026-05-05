@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { ModalPost } from '../../features/post/modals/ModalPost';
-import { useTheme } from "../../../store/theme/ThemeContext";
+import { ModalPost } from '@features/post/modals/ModalPost';
+import { useTheme } from "@store/theme";
 import { PostIcon } from '@components/ui/Icons';
 
 export const PostButton = ({ isCollapsed }: { isCollapsed: boolean }) => {

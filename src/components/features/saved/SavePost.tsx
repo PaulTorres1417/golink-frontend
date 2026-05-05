@@ -25,7 +25,7 @@ export const SavePost = ({ onReady }: { onReady?: () => void }) => {
       if (!serverIds.has(id)) removeSavedPost(id);
     });
     onReady?.();
-  }, [data]);
+  }, [data, addSavedPosts, removeSavedPost, onReady]);
 
   return null;
 };

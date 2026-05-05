@@ -1,5 +1,5 @@
 import { useFragment, useMutation } from "@apollo/client/react";
-import type { SavedCommentProps } from "@/pages/savedItems/SavedItems";
+import type { SavedCommentProps } from "@/pages/bookmarks/BookMarks";
 import type { CommentProps } from "@/pages/post/types";
 import { toast } from "react-hot-toast";
 import { gql } from "@apollo/client";
@@ -30,7 +30,7 @@ export const useSavedComment = (data: CommentProps) => {
     update: (cache) => {
       cache.updateQuery({ query: SAVED_COMMENT_QUERY }, (existing: SavedCommentProps | null) => {
         const current = existing?.getSavedComment ?? [];
-        const alreadyExists = current.some((p: any) => p.id === data.id);
+        const alreadyExists = current.some((p: CommentProps) => p.id === data.id);
         if (alreadyExists) return existing;
         return { getSavedComment: [data, ...current] };
       });
@@ -52,7 +52,7 @@ export const useSavedComment = (data: CommentProps) => {
       });
 
       cache.updateQuery({ query: SAVED_COMMENT_QUERY }, (existing: SavedCommentProps | null) => ({
-        getSavedComment: (existing?.getSavedComment ?? []).filter((p: any) => p.id !== data.id)
+        getSavedComment: (existing?.getSavedComment ?? []).filter((p: CommentProps) => p.id !== data.id)
       }));
     }
   });

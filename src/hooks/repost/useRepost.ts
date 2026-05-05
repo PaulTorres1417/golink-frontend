@@ -1,6 +1,5 @@
 import type { Post } from "@/components/features/post/types";
 import type { CommentProps } from "@/pages/post/types";
-import { useTheme } from "@/store";
 import { useNavigate } from "react-router-dom";
 
 type RepostProps = {
@@ -9,7 +8,6 @@ type RepostProps = {
 }
 export const useRepost = ({ post, comment }: RepostProps) => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -43,5 +41,5 @@ export const useRepost = ({ post, comment }: RepostProps) => {
       })
     }
   }
-  return { theme, handleClick };
+  return { handleClick };
 }
