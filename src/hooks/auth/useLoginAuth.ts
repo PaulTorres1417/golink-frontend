@@ -42,7 +42,7 @@ export const useLoginAuth = () => {
         TokenStore.set(data.login.token);
         setUser(data.login.user);
       }
-      navigate('/');
+      navigate('/home');
 
     } catch (error: unknown) {
       const gqlError = (error as { graphQLErrors?: { message: string; extensions?: { field: string } }[] })

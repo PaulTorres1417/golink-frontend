@@ -78,7 +78,7 @@ describe('useLoginAuth', () => {
     expect(setUserMock).toHaveBeenCalledWith(
       expect.objectContaining({ id: '1', name: 'Paul' })
     );
-    expect(navigateMock).toHaveBeenCalledWith('/');
+    expect(navigateMock).toHaveBeenCalledWith('/home');
   });
 
   it('maps gql field error into errors[field]', async () => {

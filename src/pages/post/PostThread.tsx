@@ -29,7 +29,7 @@ export default function PostThread() {
   const { data: dataPost, error } = useQuery<types.PostDataProps, types.PostDataVars>(GET_POST_BY_ID, {
     variables: { id: id! }
   });
-
+  console.log('data', data)
   useSubscription<types.CommentAddedSubscription>(COMMENT_ADDED_SUBSCRIPTION, {
     onData: ({ client, data: subscriptionData }) => {
       const newComment = subscriptionData.data?.commentAdded;
